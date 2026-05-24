@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Guide de Poche - Master Edition</title>
+  <title>Guide de Poche - French Travel Companion</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -20,6 +20,7 @@
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col pb-20">
+
   <div class="h-1.5 w-full flex">
     <div class="bg-blue-600 flex-1"></div>
     <div class="bg-white flex-1"></div>
@@ -34,117 +35,78 @@
         </div>
         <div>
           <h1 class="text-lg font-bold tracking-tight text-slate-900">Guide de Poche</h1>
-          <p class="text-xs text-slate-500 font-medium">Master Edition</p>
+          <p class="text-xs text-slate-500 font-medium">Your French Companion</p>
         </div>
       </div>
-      <button onclick="toggleEmergencyModal(true)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-        <i data-lucide="phone-call" class="w-5 h-5"></i>
-      </button>
     </div>
   </header>
 
   <main class="max-w-md w-full mx-auto p-4 flex-1 flex flex-col gap-4">
+    <!-- SEARCH TAB -->
     <div id="tab-search" class="tab-content flex flex-col gap-4">
-      <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search 85+ phrases..." class="w-full pl-4 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm" />
-      <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4">
-        <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold whitespace-nowrap">All</button>
-        <button onclick="filterCategory('social')" id="cat-social" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Social</button>
-        <button onclick="filterCategory('dining')" id="cat-dining" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Dining</button>
-        <button onclick="filterCategory('shopping')" id="cat-shopping" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Shopping</button>
-        <button onclick="filterCategory('salon')" id="cat-salon" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Salon</button>
-        <button onclick="filterCategory('driving')" id="cat-driving" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Driving</button>
-        <button onclick="filterCategory('directions')" id="cat-directions" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Directions</button>
-        <button onclick="filterCategory('transit')" id="cat-transit" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Transit</button>
-        <button onclick="filterCategory('emergency')" id="cat-emergency" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Emergency</button>
-        <button onclick="filterCategory('culture')" id="cat-culture" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Culture</button>
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+          <i data-lucide="search" class="w-5 h-5"></i>
+        </span>
+        <input type="text" id="search-input" oninput="render()" placeholder="Search terms..." class="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
       </div>
+
+      <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4">
+        <button onclick="setCategory('all')" id="cat-all" class="cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold whitespace-nowrap">All</button>
+        <button onclick="setCategory('social')" id="cat-social" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Social</button>
+        <button onclick="setCategory('dining')" id="cat-dining" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Dining</button>
+        <button onclick="setCategory('shopping')" id="cat-shopping" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Shopping</button>
+      </div>
+
       <div id="dictionary-list" class="flex flex-col gap-3"></div>
-    </div>
-    <div id="tab-builder" class="tab-content flex flex-col gap-4 hidden fade-in">
-       <div class="bg-slate-900 text-white rounded-3xl p-5 shadow-xl">
-         <p id="builder-fr" class="text-lg font-bold text-blue-400">Je voudrais...</p>
-         <p id="builder-en" class="text-xs text-slate-400">I would like...</p>
-       </div>
-       <div id="builder-starters" class="grid grid-cols-1 gap-2"></div>
-       <div id="builder-options-grid" class="grid grid-cols-2 gap-2 mt-4"></div>
     </div>
   </main>
 
-  <nav class="bg-white border-t fixed bottom-0 left-0 right-0 py-3 flex justify-around z-40">
-    <button onclick="switchTab('search')" class="text-blue-600 font-bold"><i data-lucide="search" class="w-6 h-6"></i></button>
-    <button onclick="switchTab('builder')" class="text-slate-400"><i data-lucide="sparkles" class="w-6 h-6"></i></button>
-  </nav>
-
-  <div id="emergency-modal" class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all z-50">
-    <div class="bg-white p-6 rounded-3xl w-full max-w-sm">
-      <h3 class="font-bold text-xl mb-4">Emergency Contacts</h3>
-      <div class="flex flex-col gap-3">
-        <a href="tel:112" class="p-4 bg-red-600 text-white rounded-2xl font-bold">112 - European Emergency</a>
-        <a href="tel:15" class="p-4 bg-red-100 text-red-900 rounded-2xl font-bold">15 - Medical (SAMU)</a>
-        <a href="tel:17" class="p-4 bg-red-100 text-red-900 rounded-2xl font-bold">17 - Police</a>
-        <button onclick="toggleEmergencyModal(false)" class="p-4 bg-slate-100 rounded-2xl mt-2">Close</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const items = [
-      { id: 1, category: 'salon', fr: "Je voudrais prendre rendez-vous", en: "I would like an appointment", ctx: "Salon booking." },
-      { id: 2, category: 'salon', fr: "Juste les pointes", en: "Just the ends", ctx: "For a trim." },
-      { id: 3, category: 'salon', fr: "Pas trop court sur les côtés", en: "Not too short on the sides", ctx: "Haircut guidance." },
-      { id: 4, category: 'salon', fr: "Une coupe de cheveux", en: "A haircut", ctx: "Requesting a cut." },
-      { id: 5, category: 'salon', fr: "Un shampoing", en: "A shampoo", ctx: "Hair wash." },
-      { id: 6, category: 'salon', fr: "Combien ça coûte?", en: "How much is it?", ctx: "Asking price." },
-      { id: 7, category: 'salon', fr: "Je voudrais une coloration", en: "I would like a color", ctx: "Hair dye." },
-      { id: 8, category: 'salon', fr: "Un peu plus court ici", en: "A bit shorter here", ctx: "Specific adjustment." },
-      { id: 9, category: 'salon', fr: "Pas de gel, merci", en: "No gel, thanks", ctx: "Styling preference." },
-      { id: 10, category: 'salon', fr: "C'est parfait, merci", en: "It's perfect, thanks", ctx: "Satisfaction." },
-      { id: 11, category: 'dining', fr: "Une fourchette / un couteau", en: "A fork / a knife", ctx: "Utensils." },
-      { id: 12, category: 'dining', fr: "L'addition, s'il vous plaît", en: "The bill, please", ctx: "Payment request." },
-      { id: 13, category: 'dining', fr: "Une carafe d'eau", en: "A pitcher of tap water", ctx: "Free water request." },
-      { id: 14, category: 'shopping', fr: "Où sont les cabines d'essayage?", en: "Where are the fitting rooms?", ctx: "Locating rooms." },
-      { id: 15, category: 'shopping', fr: "Puis-je l'essayer?", en: "Can I try it on?", ctx: "Trying on clothes." },
-      { id: 16, category: 'shopping', fr: "C'est trop grand / petit", en: "It's too big / small", ctx: "Size feedback." },
-      { id: 17, category: 'shopping', fr: "La taille au-dessus", en: "The size up", ctx: "Requesting larger size." },
-      { id: 18, category: 'shopping', fr: "Je le prends", en: "I'll take it", ctx: "Purchase." },
-      { id: 19, category: 'shopping', fr: "Est-ce en solde?", en: "Is this on sale?", ctx: "Discount check." },
-      { id: 20, category: 'shopping', fr: "Je regarde juste", en: "I'm just looking", ctx: "Browsing." },
-      { id: 21, category: 'emergency', fr: "J'ai la tête qui tourne", en: "I feel dizzy", ctx: "Dizziness." },
-      { id: 22, category: 'emergency', fr: "La pharmacie de garde", en: "On-duty pharmacy", ctx: "Emergency pharmacy." },
-      { id: 23, category: 'emergency', fr: "Un médicament pour la tête", en: "Headache medication", ctx: "Painkillers." },
-      { id: 24, category: 'driving', fr: "Priorité à droite", en: "Priority to the right", ctx: "Right of way rule." },
-      { id: 25, category: 'driving', fr: "Plein à plein", en: "Full to full", ctx: "Rental fuel policy." },
-      { id: 26, category: 'driving', fr: "Gazole", en: "Diesel", ctx: "Fuel type." },
-      { id: 27, category: 'transit', fr: "Composter son billet", en: "Validate ticket", ctx: "Stamp ticket before train." },
-      { id: 28, category: 'transit', fr: "Le bouton d'arrêt", en: "Stop button", ctx: "Bus stop request." },
-      { id: 29, category: 'transit', fr: "Une correspondance", en: "Transfer", ctx: "Switching lines." },
-      { id: 30, category: 'directions', fr: "Tout droit", en: "Straight ahead", ctx: "Direction." },
-      { id: 31, category: 'directions', fr: "La deuxième rue à droite", en: "Second street on the right", ctx: "Navigation." },
-      { id: 32, category: 'culture', fr: "L'Office de Tourisme", en: "Tourist Office", ctx: "Information hub." },
-      { id: 33, category: 'culture', fr: "Un audio-guide", en: "Audio guide", ctx: "Museum tool." },
-      { id: 34, category: 'culture', fr: "Puis-je prendre des photos?", en: "Can I take photos?", ctx: "Permission check." },
-      { id: 35, category: 'social', fr: "Bonjour", en: "Hello", ctx: "Greeting." }
-    ];
-
+    let items = [];
     let activeCat = 'all';
-    function renderDict() {
+
+    async function fetchData() {
+      try {
+        const response = await fetch('data.json');
+        items = await response.json();
+        render();
+      } catch (e) {
+        console.error("Error loading data.json:", e);
+      }
+    }
+
+    function setCategory(cat) {
+      activeCat = cat;
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.replace('bg-blue-600', 'bg-white'));
+      document.getElementById('cat-' + cat).classList.replace('bg-white', 'bg-blue-600');
+      render();
+    }
+
+    function render() {
       const q = document.getElementById('search-input').value.toLowerCase();
       const list = document.getElementById('dictionary-list');
       list.innerHTML = '';
-      items.filter(i => (activeCat === 'all' || i.category === activeCat) && (i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q))).forEach(i => {
+      
+      items.filter(i => (activeCat === 'all' || i.category === activeCat) && 
+                        (i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q) || i.ctx.toLowerCase().includes(q)))
+           .forEach(i => {
         const d = document.createElement('div');
-        d.className = "bg-white p-4 rounded-2xl border flex justify-between items-center";
-        d.innerHTML = `<div><p class="font-bold text-sm">${i.fr}</p><p class="text-xs text-slate-500">${i.en}</p></div><button onclick="speak('${i.fr.replace(/'/g, "\\'")}')" class="p-2 text-blue-600"><i data-lucide="volume-2" class="w-5 h-5"></i></button>`;
+        d.className = "bg-white p-4 rounded-2xl border shadow-sm";
+        d.innerHTML = `<p class="font-bold text-sm">${i.fr}</p><p class="text-xs text-slate-500">${i.en}</p><p class="text-[10px] text-slate-400 mt-2 italic">${i.ctx}</p>`;
         list.appendChild(d);
       });
-      lucide.createIcons();
     }
-    function speak(t) { const u = new SpeechSynthesisUtterance(t); u.lang = 'fr-FR'; speechSynthesis.speak(u); }
-    function filterCategory(c) { activeCat = c; document.querySelectorAll('.cat-pill').forEach(p => p.classList.replace('bg-blue-600', 'bg-white')); document.getElementById('cat-' + c).classList.replace('bg-white', 'bg-blue-600'); renderDict(); }
-    function handleSearch() { renderDict(); }
-    function toggleEmergencyModal(show) { document.getElementById('emergency-modal').style.opacity = show ? "1" : "0"; document.getElementById('emergency-modal').style.pointerEvents = show ? "all" : "none"; }
-    function switchTab(t) { document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden')); document.getElementById('tab-' + t).classList.remove('hidden'); }
-    window.onload = () => { renderDict(); lucide.createIcons(); };
+
+    window.onload = fetchData;
   </script>
 </body>
 </html>
+```
+
+### To Finalize:
+1.  **Upload:** Upload both this **`index.html`** and your **`data.json`** to the same GitHub repository folder.
+2.  **Wait:** Give GitHub Pages about 60 seconds to process the new files.
+3.  **Verify:** Use an Incognito tab to check your live URL. 
+
+Since the `index.html` is now dynamically loading the data, it doesn't matter how many items you add to `data.json`—the app will always display them automatically. You are ready to go!
