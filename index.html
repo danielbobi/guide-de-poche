@@ -20,7 +20,6 @@
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col pb-20">
-  
   <div class="h-1.5 w-full flex">
     <div class="bg-blue-600 flex-1"></div>
     <div class="bg-white flex-1"></div>
@@ -39,7 +38,7 @@
         </div>
       </div>
       <div class="flex items-center gap-1">
-        <button onclick="toggleEmergencyModal(true)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors mr-1" aria-label="Emergency Numbers">
+        <button onclick="toggleEmergencyModal(true)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors mr-1">
           <i data-lucide="phone-call" class="w-5 h-5"></i>
         </button>
         <button onclick="toggleInfoModal(true)" class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg">
@@ -62,7 +61,6 @@
         <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold whitespace-nowrap">All</button>
         <button onclick="filterCategory('social')" id="cat-social" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Social</button>
         <button onclick="filterCategory('dining')" id="cat-dining" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Dining</button>
-        <button onclick="filterCategory('shopping')" id="cat-shopping" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Shopping</button>
         <button onclick="filterCategory('salon')" id="cat-salon" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Salon</button>
       </div>
 
@@ -85,8 +83,9 @@
 
   <div id="emergency-modal" class="fixed inset-0 bg-slate-950/60 flex items-end justify-center z-50 p-4 transition-all opacity-0 pointer-events-none">
     <div class="bg-white rounded-3xl w-full max-w-sm p-6 flex flex-col gap-4 shadow-2xl transform translate-y-full transition-transform duration-300">
-        <h3 class="font-bold">Emergency Contacts</h3>
-        <a href="tel:112" class="p-3 bg-red-100 rounded-2xl text-red-800 font-bold">112 - European Emergency</a>
+        <h3 class="font-bold text-lg">Emergency Contacts</h3>
+        <a href="tel:112" class="p-3 bg-red-100 rounded-2xl text-red-800 font-bold block">112 - European Emergency</a>
+        <a href="tel:15" class="p-3 bg-red-100 rounded-2xl text-red-800 font-bold block">15 - Medical Emergency (SAMU)</a>
         <button onclick="toggleEmergencyModal(false)" class="p-3 bg-slate-200 rounded-2xl">Close</button>
     </div>
   </div>
@@ -107,12 +106,11 @@
       { id: 1, category: 'social', fr: "Bonjour", en: "Hello", ctx: "Essential greeting." },
       { id: 2, category: 'dining', fr: "Une carafe d'eau", en: "Free tap water", ctx: "Request free water." },
       { id: 3, category: 'dining', fr: "L'addition, s'il vous plaît", en: "The bill, please", ctx: "When ready to pay." },
-      { id: 4, category: 'shopping', fr: "cabines d'essayage?", en: "Fitting rooms?", ctx: "To try on clothes." },
-      { id: 5, category: 'salon', fr: "Je voudrais prendre rendez-vous.", en: "I would like to make an appointment.", ctx: "Salon booking." },
-      { id: 6, category: 'salon', fr: "Une coupe de cheveux.", en: "A haircut.", ctx: "What you want." },
-      { id: 7, category: 'salon', fr: "Juste les pointes.", en: "Just the ends.", ctx: "For a trim." },
-      { id: 8, category: 'salon', fr: "Un shampoing, s'il vous plaît.", en: "A shampoo, please.", ctx: "Requesting wash." },
-      { id: 9, category: 'salon', fr: "Pas trop court sur les côtés.", en: "Not too short on the sides.", ctx: "Defining length." }
+      { id: 4, category: 'salon', fr: "Je voudrais prendre rendez-vous.", en: "I would like to make an appointment.", ctx: "Salon booking." },
+      { id: 5, category: 'salon', fr: "Une coupe de cheveux.", en: "A haircut.", ctx: "Requesting a cut." },
+      { id: 6, category: 'salon', fr: "Juste les pointes.", en: "Just the ends.", ctx: "For a trim." },
+      { id: 7, category: 'salon', fr: "Un shampoing, s'il vous plaît.", en: "A shampoo, please.", ctx: "Requesting wash." },
+      { id: 8, category: 'salon', fr: "Pas trop court sur les côtés.", en: "Not too short on the sides.", ctx: "Defining length." }
     ];
 
     const builderData = {
@@ -121,10 +119,6 @@
           { fr: "un café noisette", en: "a hazelnut espresso" },
           { fr: "une coupe de cheveux", en: "a haircut" },
           { fr: "un shampoing", en: "a shampoo" }
-        ]},
-        je_cherche: { fr: "Je cherche", en: "I am looking for", opts: [
-          { fr: "un salon de coiffure", en: "a hair salon" },
-          { fr: "une boulangerie", en: "a bakery" }
         ]}
       }
     };
@@ -148,6 +142,7 @@
 
     function renderBuilder() {
       const grid = document.getElementById('builder-starters');
+      grid.innerHTML = '';
       Object.keys(builderData.starters).forEach(k => {
         const b = document.createElement('button');
         b.className = "bg-white p-3 rounded-xl border text-left text-sm font-semibold";
