@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Guide de Poche - French Travel Companion</title>
+  <title>Guide de Poche</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -12,6 +12,7 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .fade-in { animation: fadeIn 0.25s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .sticky-header-container { position: sticky; top: 0; z-index: 40; background: #f8fafc; padding-top: 1rem; padding-bottom: 0.5rem; }
     .flip-card { background-color: transparent; perspective: 1000px; }
     .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
     .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
@@ -27,7 +28,7 @@
     <div class="bg-red-500 flex-1"></div>
   </div>
 
-  <header class="bg-white border-b border-slate-100 px-4 py-3 sticky top-0 z-40 shadow-sm">
+  <header class="bg-white border-b border-slate-100 px-4 py-3 shadow-sm">
     <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2">
         <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md">
@@ -38,75 +39,115 @@
           <p class="text-xs text-slate-500 font-medium">Your French Companion</p>
         </div>
       </div>
+      <button onclick="toggleInfoModal(true)" class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"><i data-lucide="smartphone" class="w-5 h-5"></i></button>
     </div>
   </header>
 
   <main class="max-w-md w-full mx-auto p-4 flex-1 flex flex-col gap-4">
     <!-- SEARCH TAB -->
-    <div id="tab-search" class="tab-content flex flex-col gap-4">
-      <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-          <i data-lucide="search" class="w-5 h-5"></i>
-        </span>
-        <input type="text" id="search-input" oninput="render()" placeholder="Search terms..." class="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+    <div id="tab-search" class="tab-content flex flex-col">
+      <!-- STICKY SEARCH & CATEGORY CONTAINER -->
+      <div class="sticky-header-container">
+        <div class="relative mb-3">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </span>
+          <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search..." class="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+          <button id="clear-search" onclick="clearSearch()" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hidden"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+
+        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+          <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold whitespace-nowrap shadow-sm">All</button>
+          <button onclick="filterCategory('social')" id="cat-social" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Social</button>
+          <button onclick="filterCategory('dining')" id="cat-dining" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Dining</button>
+          <button onclick="filterCategory('shopping')" id="cat-shopping" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Shopping</button>
+          <button onclick="filterCategory('salon')" id="cat-salon" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Salon</button>
+          <button onclick="filterCategory('driving')" id="cat-driving" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Driving</button>
+          <button onclick="filterCategory('directions')" id="cat-directions" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Directions</button>
+          <button onclick="filterCategory('transit')" id="cat-transit" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Transit</button>
+          <button onclick="filterCategory('emergency')" id="cat-emergency" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Emergency</button>
+          <button onclick="filterCategory('culture')" id="cat-culture" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Culture</button>
+        </div>
       </div>
 
-      <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4">
-        <button onclick="setCategory('all')" id="cat-all" class="cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold whitespace-nowrap">All</button>
-        <button onclick="setCategory('social')" id="cat-social" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Social</button>
-        <button onclick="setCategory('dining')" id="cat-dining" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Dining</button>
-        <button onclick="setCategory('shopping')" id="cat-shopping" class="cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-100 rounded-full text-xs font-medium whitespace-nowrap">Shopping</button>
-      </div>
-
-      <div id="dictionary-list" class="flex flex-col gap-3"></div>
+      <div id="dictionary-list" class="flex flex-col gap-3 mt-2"></div>
     </div>
   </main>
+
+  <nav class="bg-white border-t border-slate-100 fixed bottom-0 left-0 right-0 py-2.5 shadow-lg z-40">
+    <div class="max-w-md mx-auto flex justify-center">
+        <span class="text-xs text-slate-400 font-bold">Guide de Poche v2.0</span>
+    </div>
+  </nav>
 
   <script>
     let items = [];
     let activeCat = 'all';
 
-    async function fetchData() {
+    async function fetchDatabase() {
       try {
-        const response = await fetch('data.json');
-        items = await response.json();
-        render();
+        const res = await fetch('data.json');
+        items = await res.json();
+        renderDict();
       } catch (e) {
-        console.error("Error loading data.json:", e);
+        console.error("Data load failed:", e);
       }
     }
 
-    function setCategory(cat) {
-      activeCat = cat;
-      document.querySelectorAll('.cat-pill').forEach(p => p.classList.replace('bg-blue-600', 'bg-white'));
-      document.getElementById('cat-' + cat).classList.replace('bg-white', 'bg-blue-600');
-      render();
-    }
-
-    function render() {
-      const q = document.getElementById('search-input').value.toLowerCase();
+    function renderDict() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
       const list = document.getElementById('dictionary-list');
       list.innerHTML = '';
 
-      items.filter(i => (activeCat === 'all' || i.category === activeCat) &&
-                        (i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q) || i.ctx.toLowerCase().includes(q)))
-           .forEach(i => {
+      const filtered = items.filter(i =>
+        (activeCat === 'all' || i.category === activeCat) &&
+        (i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q) || i.ctx.toLowerCase().includes(q))
+      );
+
+      filtered.forEach(i => {
         const d = document.createElement('div');
-        d.className = "bg-white p-4 rounded-2xl border shadow-sm";
-        d.innerHTML = `<p class="font-bold text-sm">${i.fr}</p><p class="text-xs text-slate-500">${i.en}</p><p class="text-[10px] text-slate-400 mt-2 italic">${i.ctx}</p>`;
+        d.className = "bg-white p-4 rounded-2xl border border-slate-100 flex flex-col gap-2 shadow-sm fade-in";
+        d.innerHTML = `
+          <div class="flex justify-between items-start gap-4">
+            <div>
+              <p class="font-bold text-slate-950">${i.fr}</p>
+              <p class="text-xs text-slate-500 font-medium">${i.en}</p>
+            </div>
+            <button onclick="speak('${i.fr.replace(/'/g, "\\'")}')" class="p-2 text-blue-600"><i data-lucide="volume-2" class="w-5 h-5"></i></button>
+          </div>
+          <div class="border-t pt-2 text-[10px] text-slate-400">Context: ${i.ctx}</div>
+        `;
         list.appendChild(d);
       });
+      lucide.createIcons();
     }
 
-    window.onload = fetchData;
+    function filterCategory(c) {
+      activeCat = c;
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.replace('bg-blue-600', 'bg-white'));
+      document.getElementById('cat-' + c).classList.replace('bg-white', 'bg-blue-600');
+      renderDict();
+    }
+
+    function handleSearch() {
+      const q = document.getElementById('search-input').value;
+      document.getElementById('clear-search').classList.toggle('hidden', q === '');
+      renderDict();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search').classList.add('hidden');
+      renderDict();
+    }
+
+    function speak(t) {
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = 'fr-FR';
+      window.speechSynthesis.speak(u);
+    }
+
+    window.onload = () => { lucide.createIcons(); fetchDatabase(); };
   </script>
 </body>
 </html>
-```
-
-### To Finalize:
-1.  **Upload:** Upload both this **`index.html`** and your **`data.json`** to the same GitHub repository folder.
-2.  **Wait:** Give GitHub Pages about 60 seconds to process the new files.
-3.  **Verify:** Use an Incognito tab to check your live URL.
-
-Since the `index.html` is now dynamically loading the data, it doesn't matter how many items you add to `data.json`—the app will always display them automatically. You are ready to go!
