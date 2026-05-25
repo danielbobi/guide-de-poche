@@ -7,101 +7,328 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    .sticky-nav { position: sticky; top: 0; z-index: 50; background: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .fade-in { animation: fadeIn 0.25s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sticky-header-container {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: #f8fafc; /* slate-50 */
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col pb-20">
+
+  <!-- TOP DECORATIVE FRENCH FLAG -->
   <div class="h-1.5 w-full flex">
     <div class="bg-blue-600 flex-1"></div>
     <div class="bg-white flex-1"></div>
     <div class="bg-red-500 flex-1"></div>
   </div>
 
-  <header class="bg-white border-b border-slate-100 px-4 py-3 shadow-sm flex items-center justify-between sticky top-0 z-40">
-    <div class="flex items-center gap-2">
-      <div class="bg-blue-600 text-white p-2 rounded-xl"><i data-lucide="compass" class="w-5 h-5"></i></div>
-      <div><h1 class="font-bold text-slate-900 text-lg">Guide de Poche</h1></div>
-    </div>
-    <div class="flex gap-2">
-      <button onclick="toggleEmergencyModal(true)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i data-lucide="phone-call" class="w-5 h-5"></i></button>
-    </div>
-  </header>
-
-  <main class="max-w-md w-full mx-auto p-4 flex-1">
-    <div class="sticky-nav">
-      <input type="text" id="search-input" oninput="renderDict()" placeholder="Search terms..." class="w-full p-3 bg-white border border-slate-200 rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-      <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 mt-2">
-        <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-bold whitespace-nowrap">All</button>
-        <button onclick="filterCategory('social')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Social</button>
-        <button onclick="filterCategory('dining')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Dining</button>
-        <button onclick="filterCategory('shopping')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Shopping</button>
-        <button onclick="filterCategory('salon')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Salon</button>
-        <button onclick="filterCategory('driving')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Driving</button>
-        <button onclick="filterCategory('directions')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Directions</button>
-        <button onclick="filterCategory('transit')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Transit</button>
-        <button onclick="filterCategory('emergency')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Emergency</button>
-        <button onclick="filterCategory('culture')" class="cat-pill px-4 py-2 bg-white text-slate-600 border rounded-full text-xs">Culture</button>
+  <!-- STICKY HEADER AND FILTER CONTAINER -->
+  <div class="sticky-header-container border-b border-slate-200 shadow-sm">
+    <!-- Header Row -->
+    <header class="bg-white px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md shadow-blue-200">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-slate-900">Guide de Poche</h1>
+          <p class="text-xs text-slate-400 font-medium">Your French Companion</p>
+        </div>
       </div>
-    </div>
-    <div id="dictionary-list" class="flex flex-col gap-3 mt-2"></div>
-  </main>
+      <div class="flex items-center gap-1.5">
+        <button onclick="toggleEmergencyModal(true)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" aria-label="Emergency calls">
+          <i data-lucide="phone-call" class="w-5 h-5"></i>
+        </button>
+        <button onclick="toggleInfoModal(true)" class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors" aria-label="Installation guide">
+          <i data-lucide="smartphone" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </header>
 
-  <div id="emergency-modal" class="fixed inset-0 bg-slate-950/60 flex items-end justify-center z-50 p-4 opacity-0 pointer-events-none transition-all">
-    <div class="bg-white rounded-3xl w-full max-w-sm p-6 flex flex-col gap-3">
-      <h3 class="font-bold text-red-600 text-lg">Emergency Services</h3>
-      <a href="tel:+33112" class="p-3 bg-red-50 rounded-xl text-red-800 font-bold border border-red-100 flex justify-between">112 - European Emergency <span>➔</span></a>
-      <a href="tel:+3315" class="p-3 bg-red-50 rounded-xl text-red-800 font-bold border border-red-100 flex justify-between">15 - Medical (SAMU) <span>➔</span></a>
-      <a href="tel:+3317" class="p-3 bg-red-50 rounded-xl text-red-800 font-bold border border-red-100 flex justify-between">17 - Police <span>➔</span></a>
-      <a href="tel:+3318" class="p-3 bg-red-50 rounded-xl text-red-800 font-bold border border-red-100 flex justify-between">18 - Firefighters <span>➔</span></a>
-      <button onclick="toggleEmergencyModal(false)" class="mt-2 p-3 bg-slate-100 rounded-xl font-bold">Close</button>
+    <div class="p-4 bg-slate-50 flex flex-col gap-3">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+          <i data-lucide="search" class="w-5 h-5"></i>
+        </span>
+        <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search signs, situations, salons..." class="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+      </div>
+
+      <!-- Auto-Generated Category Pills Container -->
+      <div id="category-bar" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+        <!-- Javascript dynamically injects unique categories here -->
+      </div>
     </div>
   </div>
 
+  <!-- MAIN APPLICATION BODY -->
+  <main class="max-w-md w-full mx-auto p-4 flex-1 flex flex-col gap-4">
+    <div id="tab-search" class="tab-content flex flex-col gap-3">
+      <div id="dictionary-list" class="flex flex-col gap-3">
+        <!-- JS renders vocabulary items here dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <div id="info-modal" class="fixed inset-0 bg-slate-950/60 flex items-end justify-center z-50 p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-3xl w-full max-w-sm p-6 flex flex-col gap-4 shadow-2xl transform translate-y-full transition-transform duration-300">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="smartphone" class="w-5 h-5 text-blue-600"></i>
+          <h3 class="font-bold text-slate-900">Install Guide for Phones</h3>
+        </div>
+        <button onclick="toggleInfoModal(false)" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <p class="text-xs text-slate-500 leading-relaxed">Save this directly to your phone's home screen. It will launch full-screen and work offline like an app!</p>
+      <div class="text-xs text-slate-600 space-y-2">
+        <p><strong>Safari (iPhone):</strong> Tap Share (<i data-lucide="share" class="w-3.5 h-3.5 inline"></i>) then select "Add to Home Screen".</p>
+        <p><strong>Chrome (Android):</strong> Tap Menu (3 dots) then select "Add to Home screen".</p>
+      </div>
+      <button onclick="toggleInfoModal(false)" class="w-full py-3 bg-blue-600 text-white rounded-xl text-xs font-semibold shadow-md">Got it</button>
+    </div>
+  </div>
+
+  <div id="emergency-modal" class="fixed inset-0 bg-slate-950/60 flex items-end justify-center z-50 p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-3xl w-full max-w-sm p-6 flex flex-col gap-4 shadow-2xl transform translate-y-full transition-transform duration-300">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div class="flex items-center gap-2 text-red-600">
+          <i data-lucide="phone-call" class="w-5 h-5"></i>
+          <h3 class="font-bold text-slate-900">Emergency Call Portal</h3>
+        </div>
+        <button onclick="toggleEmergencyModal(false)" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <p class="text-xs text-slate-500 leading-relaxed">Direct connection to emergency services using international routing compatible with your Saily eSIM:</p>
+
+      <div class="flex flex-col gap-2">
+        <a href="tel:+33112" class="p-3.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-800 font-bold border border-red-200 text-sm flex items-center justify-between transition-colors">
+          <span>112 - Universal European Help</span><i data-lucide="phone" class="w-4 h-4"></i>
+        </a>
+        <a href="tel:+3315" class="p-3.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-800 font-bold border border-red-200 text-sm flex items-center justify-between transition-colors">
+          <span>15 - Medical emergencies (SAMU)</span><i data-lucide="phone" class="w-4 h-4"></i>
+        </a>
+        <a href="tel:+3317" class="p-3.5 bg-blue-50 hover:bg-blue-100 rounded-2xl text-blue-800 font-bold border border-blue-200 text-sm flex items-center justify-between transition-colors">
+          <span>17 - Police / Gendarmerie</span><i data-lucide="phone" class="w-4 h-4"></i>
+        </a>
+        <a href="tel:+3318" class="p-3.5 bg-orange-50 hover:bg-orange-100 rounded-2xl text-orange-800 font-bold border border-orange-200 text-sm flex items-center justify-between transition-colors">
+          <span>18 - Sapeurs-Pompiers (Rescue)</span><i data-lucide="phone" class="w-4 h-4"></i>
+        </a>
+        <a href="sms:+33114" class="p-3.5 bg-emerald-50 hover:bg-emerald-100 rounded-2xl text-emerald-800 font-bold border border-emerald-200 text-sm flex items-center justify-between transition-colors">
+          <span>114 - SOS Text (When unable to speak)</span><i data-lucide="message-square" class="w-4 h-4"></i>
+        </a>
+        <a href="tel:+33116117" class="p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-800 font-bold border border-slate-200 text-sm flex items-center justify-between transition-colors">
+          <span>116 117 - Non-Emergency Doctor</span><i data-lucide="phone" class="w-4 h-4"></i>
+        </a>
+      </div>
+      <button onclick="toggleEmergencyModal(false)" class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold">Close Panel</button>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION TOAST BAR -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full shadow-lg text-xs opacity-0 transition-all duration-300 pointer-events-none z-50">Copied!</div>
+
+  <!-- APPLICATION COMPANION LOGIC -->
   <script>
     let items = [];
-    async function loadData() {
-      const res = await fetch('data.json');
-      items = await res.json();
+    let activeCat = 'all';
+
+    async function loadDatabase() {
+      try {
+        const response = await fetch('data.json');
+        items = await response.json();
+        generateCategoryPills();
+        renderDict();
+      } catch (err) {
+        showToast("Error loading data.json file.");
+        console.error("Failed to load JSON database:", err);
+      }
+    }
+
+    // RUN TIME DYNAMIC PILLS GENERATOR
+    function generateCategoryPills() {
+      const bar = document.getElementById('category-bar');
+      bar.innerHTML = '';
+
+      // Compile unique categories found inside the data file dynamically
+      const uniqueCats = ['all', ...new Set(items.map(i => i.category.toLowerCase()))];
+
+      uniqueCats.forEach(c => {
+        const b = document.createElement('button');
+        b.id = `cat-${c}`;
+        b.onclick = () => filterCategory(c);
+
+        const label = c.charAt(0).toUpperCase() + c.slice(1);
+        b.innerText = label;
+
+        if (activeCat === c) {
+          b.className = "cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-200 transition-all whitespace-nowrap";
+        } else {
+          b.className = "cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-xs hover:bg-slate-50 transition-all whitespace-nowrap";
+        }
+        bar.appendChild(b);
+      });
+    }
+
+    function filterCategory(c) {
+      activeCat = c;
+      generateCategoryPills();
       renderDict();
     }
 
-    function toggleEmergencyModal(s) {
-      const m = document.getElementById('emergency-modal');
-      m.style.opacity = s ? '1' : '0';
-      m.style.pointerEvents = s ? 'auto' : 'none';
-    }
-
     function renderDict() {
-      const q = document.getElementById('search-input').value.toLowerCase();
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
       const list = document.getElementById('dictionary-list');
       list.innerHTML = '';
-      items.filter(i => (activeCat === 'all' || i.category === activeCat) && (i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q))).forEach(i => {
+
+      const filtered = items.filter(i => {
+        const matchesCategory = activeCat === 'all' || i.category.toLowerCase() === activeCat;
+        const matchesQuery = !q ||
+          i.fr.toLowerCase().includes(q) ||
+          i.en.toLowerCase().includes(q) ||
+          i.ctx.toLowerCase().includes(q);
+        return matchesCategory && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="bg-white p-6 rounded-2xl border text-center text-slate-400 text-xs shadow-sm">No matches found. Try searching for something else.</div>`;
+        return;
+      }
+
+      filtered.forEach(i => {
         const d = document.createElement('div');
-        d.className = "bg-white p-4 rounded-2xl border flex justify-between items-start";
-        d.innerHTML = `<div><p class="font-bold text-sm">${i.fr}</p><p class="text-xs text-slate-500">${i.en}</p></div>
-                       <button onclick="speak('${i.fr.replace(/'/g, "\\'")}')" class="p-2 text-blue-600"><i data-lucide="volume-2" class="w-5 h-5"></i></button>`;
+        d.className = "bg-white p-4 rounded-2xl border border-slate-100 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow fade-in";
+
+        const topRow = document.createElement('div');
+        topRow.className = "flex justify-between items-start gap-4";
+
+        const leftCol = document.createElement('div');
+        leftCol.innerHTML = `
+          <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">${i.category}</span>
+          <p class="font-bold text-slate-950 mt-1 tracking-wide text-sm md:text-base">${i.fr}</p>
+          <p class="text-xs text-slate-500 font-medium">${i.en}</p>
+        `;
+
+        const rightCol = document.createElement('div');
+        rightCol.className = "flex gap-1";
+
+        const speakBtn = document.createElement('button');
+        speakBtn.className = "p-2 hover:bg-slate-50 rounded-xl text-blue-600 transition-all";
+        speakBtn.innerHTML = `<i data-lucide="volume-2" class="w-5 h-5"></i>`;
+        speakBtn.onclick = () => speak(i.fr);
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = "p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 rounded-xl transition-all";
+        copyBtn.innerHTML = `<i data-lucide="copy" class="w-5 h-5"></i>`;
+        copyBtn.onclick = () => copyToClipboard(i.fr);
+
+        rightCol.appendChild(speakBtn);
+        rightCol.appendChild(copyBtn);
+        topRow.appendChild(leftCol);
+        topRow.appendChild(rightCol);
+
+        const btmRow = document.createElement('div');
+        btmRow.className = "border-t border-slate-50 pt-2 text-[10px] text-slate-400 leading-normal";
+        btmRow.innerHTML = `<span class="font-bold text-slate-600">Context:</span> ${i.ctx}`;
+
+        d.appendChild(topRow);
+        d.appendChild(btmRow);
         list.appendChild(d);
       });
       lucide.createIcons();
     }
 
-    let activeCat = 'all';
-    function filterCategory(c) {
-      activeCat = c;
-      document.querySelectorAll('.cat-pill').forEach(p => p.classList.replace('bg-blue-600', 'bg-white'));
-      document.getElementById('cat-' + c).classList.replace('bg-white', 'bg-blue-600');
-      renderDict();
-    }
-
     function speak(t) {
-      const u = new SpeechSynthesisUtterance(t);
-      u.lang = 'fr-FR';
-      window.speechSynthesis.speak(u);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(t);
+        u.lang = 'fr-FR';
+
+        const setVoice = () => {
+          const voices = window.speechSynthesis.getVoices();
+          const fv = voices.find(v => v.lang.startsWith('fr') || v.lang.includes('FR'));
+          if (fv) u.voice = fv;
+        };
+
+        setVoice();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+          window.speechSynthesis.onvoiceschanged = setVoice;
+        }
+
+        window.speechSynthesis.speak(u);
+      } else {
+        showToast("Audio voice engine unavailable");
+      }
     }
 
-    window.onload = () => { loadData(); lucide.createIcons(); };
+    function copyToClipboard(t) {
+      const el = document.createElement("textarea");
+      el.value = t;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      showToast("Phrase copied!");
+    }
+
+    // TOAST LOGGER
+    function showToast(m) {
+      const toast = document.getElementById('toast');
+      toast.innerText = m || "Copied!";
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 1500);
+    }
+
+    function handleSearch() { renderDict(); }
+
+    function toggleEmergencyModal(show) {
+      const modal = document.getElementById('emergency-modal');
+      const inner = modal.querySelector('div');
+      if (show) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100');
+        inner.classList.remove('translate-y-full');
+        inner.classList.add('translate-y-0');
+      } else {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.classList.remove('opacity-100');
+        inner.classList.add('translate-y-full');
+      }
+    }
+
+    function toggleInfoModal(show) {
+      const modal = document.getElementById('info-modal');
+      const inner = modal.querySelector('div');
+      if (show) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100');
+        inner.classList.remove('translate-y-full');
+        inner.classList.add('translate-y-0');
+      } else {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.classList.remove('opacity-100');
+        inner.classList.add('translate-y-full');
+      }
+    }
+
+    window.onload = () => {
+      loadDatabase();
+    };
   </script>
 </body>
 </html>

@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Guide Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-8">
+  <div class="max-w-4xl mx-auto flex flex-col gap-6">
+    <header class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+        <p class="text-xs text-slate-500 font-medium">French Travel Database Builder</p>
+      </div>
+      <button onclick="clearBatch()" class="text-xs text-red-600 hover:text-red-800 font-semibold bg-white px-4 py-2.5 rounded-xl shadow-sm border border-red-100">Reset Queue</button>
+    </header>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+      <h2 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+        <i data-lucide="plus-circle" class="text-blue-600 w-5 h-5"></i> Add Entry to Batch
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Category (Type new or select existing)</label>
+          <input list="categories" id="cat" placeholder="e.g. social, dining, events, salon, driving" class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none text-sm font-semibold">
+          <datalist id="categories">
+            <option value="social"><option value="dining"><option value="shopping"><option value="salon"><option value="driving"><option value="directions"><option value="transit"><option value="emergency"><option value="culture"><option value="events">
+          </datalist>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">French Phrase</label>
+          <input type="text" id="fr" placeholder="French Phrase" class="w-full p-3 border rounded-xl text-sm font-semibold">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">English Translation</label>
+          <input type="text" id="en" placeholder="English Translation" class="w-full p-3 border rounded-xl text-sm font-semibold">
+        </div>
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Context / Instruction</label>
+          <textarea id="ctx" placeholder="Where is this used? Explain the real-world significance..." class="w-full p-3 border rounded-xl h-20 text-sm font-semibold"></textarea>
+        </div>
+      </div>
+      <button onclick="addToQueue()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-2xl transition-all shadow-md flex items-center justify-center gap-2">
+        <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Add to Batch Queue
+      </button>
+    </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+      <h2 class="font-bold text-slate-900 mb-4 flex items-center justify-between">
+        <span>Current Batch (<span id="count" class="text-blue-600">0</span> items)</span>
+        <i data-lucide="layers" class="text-slate-400 w-5 h-5"></i>
+      </h2>
+      <div id="batch-list" class="flex flex-col gap-2 max-h-40 overflow-y-auto mb-4 text-xs font-mono text-slate-600"></div>
+
+      <h2 class="font-bold text-slate-900 mb-2 flex items-center justify-between">
+        <span>Formatted JSON Data Block</span>
+        <span class="text-[10px] text-slate-400 font-medium">Paste inside the array in your data.json</span>
+      </h2>
+      <textarea id="json-output" class="w-full h-48 p-4 bg-slate-900 text-green-400 font-mono text-xs rounded-xl" readonly placeholder="// Formatted JSON output will write here..."></textarea>
+      <button onclick="copyOutput()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl transition-all flex items-center justify-center gap-2">
+        <i data-lucide="copy" class="w-4 h-4"></i> Copy JSON to Clipboard
+      </button>
+    </div>
+
+    <div class="bg-slate-900 text-slate-100 p-6 rounded-3xl shadow-lg border border-slate-800">
+      <h2 class="font-bold text-white mb-2 flex items-center gap-2">
+        <i data-lucide="sparkles" class="text-blue-400 w-5 h-5"></i> NotebookLM Extraction Prompt
+      </h2>
+      <p class="text-xs opacity-70 mb-4 italic">Copy this prompt and paste it into NotebookLM when you upload travel blogs or guides to extract dynamic sentences automatically!</p>
+      <code id="prompt-text" class="block bg-black/40 p-4 rounded-xl text-xs leading-relaxed border border-slate-800 text-blue-300 font-mono">
+Act as a French travel database assistant. Extract all practical situational phrases from the provided text. Return them in JSON format as an array of objects. Each object must have these exact fields: "id" (a unique number), "category", "fr", "en", and "ctx". Do not include explanations, just return the raw JSON array.
+      </code>
+      <button onclick="copyPrompt()" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2">
+        <i data-lucide="copy" class="w-4 h-4"></i> Copy Prompt
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let batch = [];
+
+    window.onload = () => {
+      lucide.createIcons();
+    };
+
+    function addToQueue() {
+      const catVal = document.getElementById('cat').value.trim().toLowerCase();
+      const frVal = document.getElementById('fr').value.trim();
+      const enVal = document.getElementById('en').value.trim();
+      const ctxVal = document.getElementById('ctx').value.trim();
+
+      if(!frVal || !enVal) {
+        alert("Please provide both a French phrase and an English translation.");
+        return;
+      }
+
+      const entry = {
+        id: batch.length + 1,
+        category: catVal || 'general',
+        fr: frVal,
+        en: enVal,
+        ctx: ctxVal || 'General reference.'
+      };
+
+      batch.push(entry);
+
+      const list = document.getElementById('batch-list');
+      const item = document.createElement('div');
+      item.className = "p-2.5 bg-slate-50 rounded-xl border border-slate-150 flex items-center justify-between";
+      item.innerHTML = `<span><strong>${entry.category.toUpperCase()}:</strong> ${entry.fr}</span><i data-lucide="check" class="text-green-500 w-4 h-4"></i>`;
+      list.appendChild(item);
+
+      document.getElementById('fr').value = '';
+      document.getElementById('en').value = '';
+      document.getElementById('ctx').value = '';
+      document.getElementById('count').innerText = batch.length;
+
+      updateJSON();
+      lucide.createIcons();
+    }
+
+    function updateJSON() {
+      document.getElementById('json-output').value = JSON.stringify(batch, null, 2);
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('json-output').value;
+      if(!output) return;
+
+      const el = document.createElement("textarea");
+      el.value = output;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+
+      alert("Batch JSON copied! Paste inside your data.json array.");
+    }
+
+    function copyPrompt() {
+      const prompt = document.getElementById('prompt-text').innerText;
+
+      const el = document.createElement("textarea");
+      el.value = prompt;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+
+      alert("Prompt copied! Ready to paste into NotebookLM.");
+    }
+
+    function clearBatch() {
+      batch = [];
+      document.getElementById('batch-list').innerHTML = '';
+      document.getElementById('count').innerText = '0';
+      document.getElementById('json-output').value = '';
+    }
+  </script>
+</body>
+</html>
