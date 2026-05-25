@@ -775,5 +775,110 @@
     "fr": "s'il vous plaît texturer mes cheveux",
     "en": "please texturize my hair",
     "ctx": "styling request"
+  },
+  {
+    "id": 112,
+    "category": "driving",
+    "fr": "Ma voiture a un problème",
+    "en": "My car has a problem",
+    "ctx": "when the car has a mechanical problem"
+  },
+  {
+    "id": 113,
+    "category": "driving",
+    "fr": "J'ai besoin d'une assistance routière",
+    "en": "I need roadside assistance",
+    "ctx": "when you have a car breakdown on the road"
+  },
+  {
+    "id": 114,
+    "category": "driving",
+    "fr": "Veuillez vérifier mes pneus",
+    "en": "Please check my tires",
+    "ctx": "when the car tires need air"
+  },
+  {
+    "id": 115,
+    "category": "driving",
+    "fr": "Remplissez-le s'il vous plaît.",
+    "en": "fill it up, please",
+    "ctx": "to fill up the gas tank"
+  },
+  {
+    "id": 116,
+    "category": "social",
+    "fr": "j'ai oublié de",
+    "en": "I forgot to",
+    "ctx": "when I forgot to do something"
+  },
+  {
+    "id": 117,
+    "category": "social",
+    "fr": "J'ai oublié les clés",
+    "en": "I forgot the keys",
+    "ctx": "when I forgot something"
+  },
+  {
+    "id": 118,
+    "category": "social",
+    "fr": "J'ai perdu mes clés.",
+    "en": "I lost my keys",
+    "ctx": "when I lost something"
+  },
+  {
+    "id": 119,
+    "category": "social",
+    "fr": "Mon français n'est pas bon, désolé",
+    "en": "My French is not good, sorry",
+    "ctx": "when not speaking French well"
+  },
+  {
+    "id": 120,
+    "category": "social",
+    "fr": "Vous êtes très gentil",
+    "en": "You are very kind",
+    "ctx": "polite language"
+  },
+  {
+    "id": 121,
+    "category": "shopping",
+    "fr": "Puis-je payer par carte crédit",
+    "en": "Can I pay with credit card",
+    "ctx": "when shopping with CC"
+  },
+  {
+    "id": 122,
+    "category": "shopping",
+    "fr": "J'ai besoin de (lotion solaire)",
+    "en": "I need (suntan lotion)",
+    "ctx": "when shopping at a drug store"
+  },
+  {
+    "id": 123,
+    "category": "social",
+    "fr": "Je recherche",
+    "en": "I am looking for",
+    "ctx": "when looking for something in the store or street"
+  },
+  {
+    "id": 124,
+    "category": "social",
+    "fr": "Aidez-moi s'il vous plaît",
+    "en": "Help me please",
+    "ctx": "when needing help with something"
+  },
+  {
+    "id": 125,
+    "category": "driving",
+    "fr": "Combien de temps faut-il",
+    "en": "How long does it take",
+    "ctx": "when asking about driving distance"
+  },
+  {
+    "id": 126,
+    "category": "social",
+    "fr": "Il est très beau",
+    "en": "It is very beautiful here",
+    "ctx": "describing a place you think is pretty"
   }
 ]
