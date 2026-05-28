@@ -1,334 +1,739 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Guide de Poche">
+  <meta name="theme-color" content="#1a2744">
+  <link rel="manifest" href="manifest.json">
   <title>Guide de Poche</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    :root {
+      --cream:   #f5f0e8;
+      --cream2:  #ede7d9;
+      --navy:    #1a2744;
+      --navy2:   #243560;
+      --red:     #c0392b;
+      --red2:    #e74c3c;
+      --gold:    #b8860b;
+      --gold2:   #d4a017;
+      --ink:     #1c1c2e;
+      --muted:   #6b6b7e;
+      --border:  #d8d0c0;
+      --white:   #ffffff;
+      --shadow:  rgba(26,39,68,0.10);
+      --card-r:  16px;
     }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .fade-in { animation: fadeIn 0.25s ease-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+    }
+    ::-webkit-scrollbar { display: none; }
+    * { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ── HEADER ── */
+    .app-header {
+      position: sticky; top: 0; z-index: 40;
+      background: var(--navy);
+      padding: 0;
+    }
+    .flag-stripe { height: 3px; display: flex; }
+    .flag-stripe span:nth-child(1) { background: #0055a4; flex: 1; }
+    .flag-stripe span:nth-child(2) { background: #ffffff; flex: 1; }
+    .flag-stripe span:nth-child(3) { background: #ef4135; flex: 1; }
+    .header-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .header-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700;
+      color: #ffffff; letter-spacing: -0.01em; line-height: 1.1;
+    }
+    .header-sub {
+      font-size: 10px; color: rgba(255,255,255,0.5);
+      font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .header-actions { display: flex; gap: 4px; }
+    .hbtn {
+      width: 36px; height: 36px; border-radius: 10px; border: none;
+      background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.85);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; font-size: 16px;
+    }
+    .hbtn:hover { background: rgba(255,255,255,0.18); }
+    .hbtn.red { background: rgba(192,57,43,0.30); color: #ff9a9a; }
+    .hbtn.red:hover { background: rgba(192,57,43,0.50); }
+
+    /* ── SEARCH + FILTER ── */
+    .search-area {
+      padding: 10px 16px 12px;
+      background: var(--navy);
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: rgba(255,255,255,0.4); pointer-events: none;
+    }
+    .search-input {
+      width: 100%; padding: 10px 40px 10px 38px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px; color: #fff; font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none; transition: all 0.2s;
+    }
+    .search-input::placeholder { color: rgba(255,255,255,0.35); }
+    .search-input:focus {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.35);
+    }
+    .search-clear {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 20px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
+      cursor: pointer; display: none; align-items: center; justify-content: center;
+      font-size: 12px; line-height: 1;
+    }
+    .search-clear.visible { display: flex; }
+
+    .cat-bar {
+      display: flex; gap: 6px; overflow-x: auto;
+      padding: 8px 16px 0; background: var(--navy);
+      padding-bottom: 14px;
+    }
+    .cat-pill {
+      flex-shrink: 0; padding: 5px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent; color: rgba(255,255,255,0.6);
+      transition: all 0.15s; font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+    }
+    .cat-pill:hover { background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.9); }
+    .cat-pill.active {
+      background: #ffffff; color: var(--navy);
+      border-color: #ffffff; font-weight: 700;
+    }
+    .cat-pill.fav-pill.active { background: var(--gold2); border-color: var(--gold2); color: #fff; }
+    .cat-pill.recent-pill.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      max-width: 480px; margin: 0 auto;
+      padding: 14px 14px 100px;
+      display: flex; flex-direction: column; gap: 10px;
     }
 
-    .sticky-header-container {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background-color: #f8fafc; /* slate-50 */
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 4px 2px 2px; margin-top: 4px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--card-r);
+      overflow: hidden;
+      box-shadow: 0 1px 4px var(--shadow);
+      transition: box-shadow 0.2s, transform 0.15s;
+      animation: slideUp 0.2s ease-out both;
+    }
+    .card:active { transform: scale(0.985); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card-top {
+      padding: 12px 14px 10px;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
+    }
+    .card-left { flex: 1; min-width: 0; }
+    .card-cat {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 4px; margin-bottom: 6px;
+    }
+    .card-fr {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 600; color: var(--ink);
+      line-height: 1.3; margin-bottom: 3px;
+    }
+    .card-en {
+      font-size: 12px; color: var(--muted); font-weight: 500; line-height: 1.4;
+    }
+    .card-actions {
+      display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;
+    }
+    .act-btn {
+      width: 34px; height: 34px; border-radius: 10px; border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; font-size: 15px;
+    }
+    .act-speak { background: #e8f0ff; color: var(--navy); }
+    .act-speak:hover { background: var(--navy); color: white; }
+    .act-speak.playing { background: var(--navy); color: white; animation: pulse 1s ease infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .act-copy  { background: #f4f4f8; color: var(--muted); }
+    .act-copy:hover { background: var(--ink); color: white; }
+    .act-fav   { background: #fff8e8; color: #c8a020; font-size: 16px; }
+    .act-fav:hover { background: var(--gold2); color: white; }
+    .act-fav.active { background: var(--gold2); color: white; }
+
+    /* ── CONTEXT (collapsed by default) ── */
+    .card-ctx-wrap {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.28s ease, opacity 0.2s ease;
+      opacity: 0;
+    }
+    .card-ctx-wrap.open {
+      max-height: 200px;
+      opacity: 1;
+    }
+    .card-ctx {
+      padding: 0 14px 12px;
+      font-size: 11px; color: var(--muted); line-height: 1.6;
+      border-top: 1px solid #f0ece4;
+      padding-top: 8px;
+    }
+    .card-ctx strong { color: var(--ink); font-weight: 600; }
+    .card-toggle {
+      width: 100%; padding: 7px 14px; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px; color: var(--muted); font-family: 'DM Sans', sans-serif;
+      border-top: 1px solid #f0ece4; transition: background 0.15s;
+    }
+    .card-toggle:hover { background: #faf8f4; }
+    .card-toggle .arrow {
+      font-size: 10px; transition: transform 0.22s;
+      display: inline-block;
+    }
+    .card-toggle.open .arrow { transform: rotate(180deg); }
+
+    /* ── CATEGORY COLORS ── */
+    .cc-social     { background:#eeeeff; color:#3030a0; }
+    .cc-dining     { background:#fff3e8; color:#7a3a08; }
+    .cc-shopping   { background:#edf8f0; color:#155a28; }
+    .cc-salon      { background:#fdeeff; color:#720080; }
+    .cc-driving    { background:#f2f2f4; color:#303040; }
+    .cc-directions { background:#e8f8fa; color:#105060; }
+    .cc-transit    { background:#fafae8; color:#505010; }
+    .cc-emergency  { background:#fff0f0; color:#800010; }
+    .cc-culture    { background:#f0f0ff; color:#202080; }
+    .cc-events     { background:#fff0f5; color:#800030; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center; padding: 48px 24px;
+      color: var(--muted); font-size: 14px;
+    }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; }
+    .empty h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); margin-bottom: 6px; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px);
+      background: var(--navy); color: white;
+      padding: 9px 18px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+      opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 100;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── MODAL SHEET ── */
+    .sheet-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,20,40,0.6);
+      z-index: 50; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .sheet-overlay.open { opacity: 1; pointer-events: all; }
+    .sheet {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--white); border-radius: 24px 24px 0 0;
+      padding: 0 0 env(safe-area-inset-bottom);
+      max-height: 80vh; overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+      z-index: 51;
+    }
+    .sheet.open { transform: translateY(0); }
+    .sheet-handle {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: var(--border); margin: 12px auto 0;
+    }
+    .sheet-header {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--cream2);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .sheet-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700; color: var(--ink);
+    }
+    .sheet-close {
+      width: 30px; height: 30px; border-radius: 8px; border: none;
+      background: var(--cream); color: var(--muted); cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+    }
+    .sheet-body { padding: 16px 20px 24px; }
+
+    /* emergency items */
+    .em-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 16px; border-radius: 14px; margin-bottom: 8px;
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      transition: filter 0.15s;
+    }
+    .em-item:hover { filter: brightness(0.96); }
+    .em-item:last-child { margin-bottom: 0; }
+    .em-red   { background: #fff0f0; color: #8b0000; border: 1px solid #ffbcbc; }
+    .em-blue  { background: #f0f4ff; color: #001d8a; border: 1px solid #b0c4ff; }
+    .em-orange{ background: #fff5e8; color: #7a3800; border: 1px solid #ffd0a0; }
+    .em-green { background: #edf8f0; color: #0a4a1a; border: 1px solid #90d8a8; }
+    .em-slate { background: #f4f4f8; color: #1c1c2e; border: 1px solid #d0d0dc; }
+    .em-icon  { font-size: 18px; }
+
+    /* install guide */
+    .install-step {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 0; border-bottom: 1px solid var(--cream2);
+    }
+    .install-step:last-child { border-bottom: none; }
+    .install-num {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      background: var(--navy); color: white;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .install-text { font-size: 13px; color: var(--ink); line-height: 1.5; }
+    .install-text strong { color: var(--navy); }
+
+    /* count badge */
+    .count-badge {
+      font-size: 10px; color: var(--muted);
+      padding: 2px 0; text-align: right;
+      font-weight: 500; letter-spacing: 0.02em;
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col pb-20">
+<body>
 
-  <!-- TOP DECORATIVE FRENCH FLAG -->
-  <div class="h-1.5 w-full flex">
-    <div class="bg-blue-600 flex-1"></div>
-    <div class="bg-white flex-1"></div>
-    <div class="bg-red-500 flex-1"></div>
-  </div>
-
-  <!-- STICKY HEADER AND FILTER CONTAINER -->
-  <div class="sticky-header-container border-b border-slate-200 shadow-sm">
-    <!-- Header Row -->
-    <header class="bg-white px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md shadow-blue-200">
-          <i data-lucide="compass" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h1 class="text-lg font-bold tracking-tight text-slate-900">Guide de Poche</h1>
-          <p class="text-xs text-slate-400 font-medium">Your French Companion</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-1.5">
-        <button onclick="toggleEmergencyModal(true)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" aria-label="Emergency calls">
-          <i data-lucide="phone-call" class="w-5 h-5"></i>
-        </button>
-        <button onclick="toggleInfoModal(true)" class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors" aria-label="Installation guide">
-          <i data-lucide="smartphone" class="w-5 h-5"></i>
-        </button>
-      </div>
-    </header>
-
-    <div class="p-4 bg-slate-50 flex flex-col gap-3">
-      <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-          <i data-lucide="search" class="w-5 h-5"></i>
-        </span>
-        <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search signs, situations, salons..." class="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
-      </div>
-
-      <!-- Auto-Generated Category Pills Container -->
-      <div id="category-bar" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-        <!-- Javascript dynamically injects unique categories here -->
+<!-- HEADER -->
+<div class="app-header">
+  <div class="flag-stripe"><span></span><span></span><span></span></div>
+  <div class="header-row">
+    <div class="header-brand">
+      <div class="header-icon">🗺</div>
+      <div>
+        <div class="header-title">Guide de Poche</div>
+        <div class="header-sub">Your French Companion</div>
       </div>
     </div>
-  </div>
-
-  <!-- MAIN APPLICATION BODY -->
-  <main class="max-w-md w-full mx-auto p-4 flex-1 flex flex-col gap-4">
-    <div id="tab-search" class="tab-content flex flex-col gap-3">
-      <div id="dictionary-list" class="flex flex-col gap-3">
-        <!-- JS renders vocabulary items here dynamically -->
-      </div>
-    </div>
-  </main>
-
-  <div id="info-modal" class="fixed inset-0 bg-slate-950/60 flex items-end justify-center z-50 p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white rounded-3xl w-full max-w-sm p-6 flex flex-col gap-4 shadow-2xl transform translate-y-full transition-transform duration-300">
-      <div class="flex items-center justify-between border-b pb-3">
-        <div class="flex items-center gap-2">
-          <i data-lucide="smartphone" class="w-5 h-5 text-blue-600"></i>
-          <h3 class="font-bold text-slate-900">Install Guide for Phones</h3>
-        </div>
-        <button onclick="toggleInfoModal(false)" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <p class="text-xs text-slate-500 leading-relaxed">Save this directly to your phone's home screen. It will launch full-screen and work offline like an app!</p>
-      <div class="text-xs text-slate-600 space-y-2">
-        <p><strong>Safari (iPhone):</strong> Tap Share (<i data-lucide="share" class="w-3.5 h-3.5 inline"></i>) then select "Add to Home Screen".</p>
-        <p><strong>Chrome (Android):</strong> Tap Menu (3 dots) then select "Add to Home screen".</p>
-      </div>
-      <button onclick="toggleInfoModal(false)" class="w-full py-3 bg-blue-600 text-white rounded-xl text-xs font-semibold shadow-md">Got it</button>
+    <div class="header-actions">
+      <button class="hbtn red" onclick="openSheet('emergency')" aria-label="Emergency numbers" title="Emergency numbers">🆘</button>
+      <button class="hbtn" onclick="openSheet('install')" aria-label="Install app" title="Install to home screen">📲</button>
     </div>
   </div>
-
-  <div id="emergency-modal" class="fixed inset-0 bg-slate-950/60 flex items-end justify-center z-50 p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white rounded-3xl w-full max-w-sm p-6 flex flex-col gap-4 shadow-2xl transform translate-y-full transition-transform duration-300">
-      <div class="flex items-center justify-between border-b pb-3">
-        <div class="flex items-center gap-2 text-red-600">
-          <i data-lucide="phone-call" class="w-5 h-5"></i>
-          <h3 class="font-bold text-slate-900">Emergency Call Portal</h3>
-        </div>
-        <button onclick="toggleEmergencyModal(false)" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <p class="text-xs text-slate-500 leading-relaxed">Direct connection to emergency services using international routing compatible with your Saily eSIM:</p>
-
-      <div class="flex flex-col gap-2">
-        <a href="tel:+33112" class="p-3.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-800 font-bold border border-red-200 text-sm flex items-center justify-between transition-colors">
-          <span>112 - Universal European Help</span><i data-lucide="phone" class="w-4 h-4"></i>
-        </a>
-        <a href="tel:+3315" class="p-3.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-800 font-bold border border-red-200 text-sm flex items-center justify-between transition-colors">
-          <span>15 - Medical emergencies (SAMU)</span><i data-lucide="phone" class="w-4 h-4"></i>
-        </a>
-        <a href="tel:+3317" class="p-3.5 bg-blue-50 hover:bg-blue-100 rounded-2xl text-blue-800 font-bold border border-blue-200 text-sm flex items-center justify-between transition-colors">
-          <span>17 - Police / Gendarmerie</span><i data-lucide="phone" class="w-4 h-4"></i>
-        </a>
-        <a href="tel:+3318" class="p-3.5 bg-orange-50 hover:bg-orange-100 rounded-2xl text-orange-800 font-bold border border-orange-200 text-sm flex items-center justify-between transition-colors">
-          <span>18 - Sapeurs-Pompiers (Rescue)</span><i data-lucide="phone" class="w-4 h-4"></i>
-        </a>
-        <a href="sms:+33114" class="p-3.5 bg-emerald-50 hover:bg-emerald-100 rounded-2xl text-emerald-800 font-bold border border-emerald-200 text-sm flex items-center justify-between transition-colors">
-          <span>114 - SOS Text (When unable to speak)</span><i data-lucide="message-square" class="w-4 h-4"></i>
-        </a>
-        <a href="tel:+33116117" class="p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-800 font-bold border border-slate-200 text-sm flex items-center justify-between transition-colors">
-          <span>116 117 - Non-Emergency Doctor</span><i data-lucide="phone" class="w-4 h-4"></i>
-        </a>
-      </div>
-      <button onclick="toggleEmergencyModal(false)" class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold">Close Panel</button>
+  <div class="search-area">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input
+        class="search-input"
+        id="search-input"
+        type="search"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        placeholder="Search phrases, situations, signs…"
+        oninput="handleSearch(this.value)"
+      >
+      <button class="search-clear" id="search-clear" onclick="clearSearch()" aria-label="Clear search">✕</button>
     </div>
   </div>
+  <div class="cat-bar" id="cat-bar"></div>
+</div>
 
-  <!-- NOTIFICATION TOAST BAR -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full shadow-lg text-xs opacity-0 transition-all duration-300 pointer-events-none z-50">Copied!</div>
+<!-- MAIN -->
+<main id="main-list"></main>
 
-  <!-- APPLICATION COMPANION LOGIC -->
-  <script>
-    let items = [];
-    let activeCat = 'all';
+<!-- EMERGENCY SHEET -->
+<div class="sheet-overlay" id="em-overlay" onclick="closeSheet('emergency')"></div>
+<div class="sheet" id="em-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <span class="sheet-title">🆘 Emergency Numbers</span>
+    <button class="sheet-close" onclick="closeSheet('emergency')">✕</button>
+  </div>
+  <div class="sheet-body">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Direct-dial emergency services. Compatible with international SIMs.</p>
+    <a href="tel:+33112" class="em-item em-red"><span>112 — Universal European Emergency</span><span class="em-icon">📞</span></a>
+    <a href="tel:+3315"  class="em-item em-red"><span>15 — SAMU Medical Emergency</span><span class="em-icon">🚑</span></a>
+    <a href="tel:+3317"  class="em-item em-blue"><span>17 — Police / Gendarmerie</span><span class="em-icon">🚔</span></a>
+    <a href="tel:+3318"  class="em-item em-orange"><span>18 — Sapeurs-Pompiers (Fire/Rescue)</span><span class="em-icon">🚒</span></a>
+    <a href="sms:+33114" class="em-item em-green"><span>114 — SOS Text (when unable to speak)</span><span class="em-icon">💬</span></a>
+    <a href="tel:+33116117" class="em-item em-slate"><span>116 117 — Non-Emergency Doctor</span><span class="em-icon">🩺</span></a>
+  </div>
+</div>
 
-    async function loadDatabase() {
-      try {
-        const response = await fetch('data.json');
-        items = await response.json();
-        generateCategoryPills();
-        renderDict();
-      } catch (err) {
-        showToast("Error loading data.json file.");
-        console.error("Failed to load JSON database:", err);
-      }
+<!-- INSTALL SHEET -->
+<div class="sheet-overlay" id="in-overlay" onclick="closeSheet('install')"></div>
+<div class="sheet" id="in-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <span class="sheet-title">📲 Install as App</span>
+    <button class="sheet-close" onclick="closeSheet('install')">✕</button>
+  </div>
+  <div class="sheet-body">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5">Save to your home screen for full-screen, offline access — no app store needed.</p>
+    <div class="install-step">
+      <div class="install-num">1</div>
+      <div class="install-text"><strong>iPhone / Safari</strong><br>Tap the Share button <strong>⎙</strong> at the bottom of the screen, then choose <strong>"Add to Home Screen"</strong>.</div>
+    </div>
+    <div class="install-step">
+      <div class="install-num">2</div>
+      <div class="install-text"><strong>Android / Chrome</strong><br>Tap the <strong>⋮</strong> menu in the top-right, then select <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</div>
+    </div>
+    <div class="install-step">
+      <div class="install-num">3</div>
+      <div class="install-text"><strong>Works offline</strong><br>Once installed, all phrases load instantly — no signal needed at the pharmacy counter.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.395.0/dist/umd/lucide.min.js"></script>
+<script>
+// ── DATA & STATE ──────────────────────────────────────────────────────────
+let items = [];
+let activeCat = 'all';
+let searchQuery = '';
+let favorites = new Set(JSON.parse(localStorage.getItem('gdp_favs') || '[]'));
+let recentIds  = JSON.parse(localStorage.getItem('gdp_recent') || '[]'); // array of ids, newest first
+let openCards  = new Set(); // ids of expanded ctx cards
+let speaking   = null; // id of currently speaking card
+
+const CAT_ORDER = ['all','⭐ favorites','🕐 recent','social','dining','shopping','salon','driving','directions','transit','emergency','culture','events'];
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const resp = await fetch('data.json');
+    if (!resp.ok) throw new Error('fetch failed');
+    items = await resp.json();
+    // cache for offline
+    if ('caches' in window) {
+      const cache = await caches.open('gdp-v1');
+      cache.put('data.json', new Response(JSON.stringify(items), {headers:{'Content-Type':'application/json'}}));
     }
+  } catch(e) {
+    // try cache
+    if ('caches' in window) {
+      const cache = await caches.open('gdp-v1');
+      const cached = await cache.match('data.json');
+      if (cached) items = await cached.json();
+    }
+    if (!items.length) { showToast('Could not load phrases'); return; }
+  }
+  buildCatBar();
+  render();
+}
 
-    // RUN TIME DYNAMIC PILLS GENERATOR
-    function generateCategoryPills() {
-      const bar = document.getElementById('category-bar');
-      bar.innerHTML = '';
+// ── CATEGORY BAR ─────────────────────────────────────────────────────────
+function buildCatBar() {
+  const bar = document.getElementById('cat-bar');
+  const rawCats = [...new Set(items.map(i => i.category.toLowerCase()))];
+  // sort by CAT_ORDER, then alphabetically for any custom ones
+  const sorted = rawCats.sort((a,b) => {
+    const ai = CAT_ORDER.indexOf(a), bi = CAT_ORDER.indexOf(b);
+    if (ai >= 0 && bi >= 0) return ai - bi;
+    if (ai >= 0) return -1; if (bi >= 0) return 1;
+    return a.localeCompare(b);
+  });
+  const cats = ['all', '⭐ favorites', '🕐 recent', ...sorted];
+  bar.innerHTML = cats.map(c => {
+    const cls = c === '⭐ favorites' ? 'cat-pill fav-pill' : c === '🕐 recent' ? 'cat-pill recent-pill' : 'cat-pill';
+    const active = activeCat === c ? ' active' : '';
+    const label = c === 'all' ? 'All' : cap(c);
+    return `<button class="${cls}${active}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${label}</button>`;
+  }).join('');
+}
 
-      // Compile unique categories found inside the data file dynamically
-      const uniqueCats = ['all', ...new Set(items.map(i => i.category.toLowerCase()))];
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-      uniqueCats.forEach(c => {
-        const b = document.createElement('button');
-        b.id = `cat-${c}`;
-        b.onclick = () => filterCategory(c);
+function setCat(c) {
+  activeCat = c;
+  document.querySelectorAll('.cat-pill').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === c.toLowerCase() || (c==='all' && b.textContent==='All'));
+  });
+  render();
+  // scroll cat bar to show active pill
+  const active = document.querySelector('.cat-pill.active');
+  if (active) active.scrollIntoView({inline:'center', behavior:'smooth', block:'nearest'});
+}
 
-        const label = c.charAt(0).toUpperCase() + c.slice(1);
-        b.innerText = label;
+// ── SEARCH ────────────────────────────────────────────────────────────────
+function handleSearch(val) {
+  searchQuery = val.toLowerCase().trim();
+  document.getElementById('search-clear').classList.toggle('visible', val.length > 0);
+  render();
+}
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  handleSearch('');
+}
 
-        if (activeCat === c) {
-          b.className = "cat-pill px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow-md shadow-blue-200 transition-all whitespace-nowrap";
-        } else {
-          b.className = "cat-pill px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-xs hover:bg-slate-50 transition-all whitespace-nowrap";
-        }
-        bar.appendChild(b);
+// ── RENDER ────────────────────────────────────────────────────────────────
+function getFiltered() {
+  let pool;
+  if (activeCat === '⭐ favorites') {
+    pool = items.filter(i => favorites.has(i.id));
+  } else if (activeCat === '🕐 recent') {
+    const ids = recentIds.slice(0, 20);
+    pool = ids.map(id => items.find(i => i.id === id)).filter(Boolean);
+  } else if (activeCat !== 'all') {
+    pool = items.filter(i => i.category.toLowerCase() === activeCat);
+  } else {
+    pool = items;
+  }
+  if (!searchQuery) return pool;
+  return pool.filter(i =>
+    i.fr.toLowerCase().includes(searchQuery) ||
+    i.en.toLowerCase().includes(searchQuery) ||
+    (i.ctx||'').toLowerCase().includes(searchQuery)
+  );
+}
+
+function render() {
+  const list = document.getElementById('main-list');
+  const filtered = getFiltered();
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty">
+      <div class="empty-icon">${activeCat==='⭐ favorites'?'⭐':activeCat==='🕐 recent'?'🕐':'🔍'}</div>
+      <h3>${activeCat==='⭐ favorites'?'No favourites yet':activeCat==='🕐 recent'?'Nothing used yet':'No matches'}</h3>
+      <p>${activeCat==='⭐ favorites'?'Tap ★ on any phrase to save it here':activeCat==='🕐 recent'?'Phrases you speak or copy will appear here':'Try a different search or category'}</p>
+    </div>`;
+    return;
+  }
+
+  const total = filtered.length;
+  let html = `<div class="count-badge">${total} phrase${total===1?'':'s'}</div>`;
+
+  // group by category when viewing 'all' without search
+  if (activeCat === 'all' && !searchQuery) {
+    const groups = {};
+    filtered.forEach(i => {
+      const c = i.category.toLowerCase();
+      if (!groups[c]) groups[c] = [];
+      groups[c].push(i);
+    });
+    const orderedCats = Object.keys(groups).sort((a,b) => {
+      const ai = CAT_ORDER.indexOf(a), bi = CAT_ORDER.indexOf(b);
+      if (ai>=0&&bi>=0) return ai-bi; if (ai>=0) return -1; if (bi>=0) return 1;
+      return a.localeCompare(b);
+    });
+    orderedCats.forEach(cat => {
+      html += `<div class="section-label">${cap(cat)}</div>`;
+      groups[cat].forEach((item, idx) => {
+        html += buildCard(item, idx * 20);
       });
-    }
+    });
+  } else {
+    filtered.forEach((item, idx) => { html += buildCard(item, idx * 20); });
+  }
 
-    function filterCategory(c) {
-      activeCat = c;
-      generateCategoryPills();
-      renderDict();
-    }
+  list.innerHTML = html;
+}
 
-    function renderDict() {
-      const q = document.getElementById('search-input').value.toLowerCase().trim();
-      const list = document.getElementById('dictionary-list');
-      list.innerHTML = '';
+function buildCard(item, delay=0) {
+  const isFav    = favorites.has(item.id);
+  const isOpen   = openCards.has(item.id);
+  const isSpeaking = speaking === item.id;
+  const catCls   = 'cc-' + (item.category||'social').toLowerCase();
+  const hasCtx   = item.ctx && item.ctx.trim().length > 0;
+  return `
+<div class="card" style="animation-delay:${delay}ms" id="card-${item.id}">
+  <div class="card-top">
+    <div class="card-left" onclick="toggleCtx(${item.id})" style="cursor:pointer">
+      <span class="card-cat ${catCls}">${item.category}</span>
+      <div class="card-fr">${esc(item.fr)}</div>
+      <div class="card-en">${esc(item.en)}</div>
+    </div>
+    <div class="card-actions">
+      <button class="act-btn act-speak${isSpeaking?' playing':''}" onclick="speakPhrase(${item.id})" aria-label="Speak" title="Speak">
+        ${isSpeaking ? '🔊' : '▶'}
+      </button>
+      <button class="act-btn act-copy" onclick="copyPhrase(${item.id})" aria-label="Copy French" title="Copy French">⎘</button>
+      <button class="act-btn act-fav${isFav?' active':''}" onclick="toggleFav(${item.id})" aria-label="Favourite" title="Favourite">
+        ${isFav ? '★' : '☆'}
+      </button>
+    </div>
+  </div>
+  ${hasCtx ? `
+  <button class="card-toggle${isOpen?' open':''}" onclick="toggleCtx(${item.id})">
+    <span>Context &amp; usage tip</span>
+    <span class="arrow">▾</span>
+  </button>
+  <div class="card-ctx-wrap${isOpen?' open':''}">
+    <div class="card-ctx">${esc(item.ctx)}</div>
+  </div>` : ''}
+</div>`;
+}
 
-      const filtered = items.filter(i => {
-        const matchesCategory = activeCat === 'all' || i.category.toLowerCase() === activeCat;
-        const matchesQuery = !q ||
-          i.fr.toLowerCase().includes(q) ||
-          i.en.toLowerCase().includes(q) ||
-          i.ctx.toLowerCase().includes(q);
-        return matchesCategory && matchesQuery;
-      });
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-      if (filtered.length === 0) {
-        list.innerHTML = `<div class="bg-white p-6 rounded-2xl border text-center text-slate-400 text-xs shadow-sm">No matches found. Try searching for something else.</div>`;
-        return;
-      }
+// ── CONTEXT TOGGLE ────────────────────────────────────────────────────────
+function toggleCtx(id) {
+  if (openCards.has(id)) openCards.delete(id); else openCards.add(id);
+  const wrap = document.querySelector(`#card-${id} .card-ctx-wrap`);
+  const btn  = document.querySelector(`#card-${id} .card-toggle`);
+  if (wrap) wrap.classList.toggle('open', openCards.has(id));
+  if (btn)  btn.classList.toggle('open', openCards.has(id));
+}
 
-      filtered.forEach(i => {
-        const d = document.createElement('div');
-        d.className = "bg-white p-4 rounded-2xl border border-slate-100 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow fade-in";
+// ── SPEAK ─────────────────────────────────────────────────────────────────
+function speakPhrase(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  if (!('speechSynthesis' in window)) { showToast('Speech not available'); return; }
 
-        const topRow = document.createElement('div');
-        topRow.className = "flex justify-between items-start gap-4";
+  // if already speaking this card, stop
+  if (speaking === id) {
+    window.speechSynthesis.cancel();
+    speaking = null;
+    refreshCard(id);
+    return;
+  }
 
-        const leftCol = document.createElement('div');
-        leftCol.innerHTML = `
-          <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">${i.category}</span>
-          <p class="font-bold text-slate-950 mt-1 tracking-wide text-sm md:text-base">${i.fr}</p>
-          <p class="text-xs text-slate-500 font-medium">${i.en}</p>
-        `;
+  window.speechSynthesis.cancel();
+  speaking = id;
+  refreshCard(id);
+  addRecent(id);
 
-        const rightCol = document.createElement('div');
-        rightCol.className = "flex gap-1";
+  const u = new SpeechSynthesisUtterance(item.fr);
+  u.lang = 'fr-FR'; u.rate = 0.88;
 
-        const speakBtn = document.createElement('button');
-        speakBtn.className = "p-2 hover:bg-slate-50 rounded-xl text-blue-600 transition-all";
-        speakBtn.innerHTML = `<i data-lucide="volume-2" class="w-5 h-5"></i>`;
-        speakBtn.onclick = () => speak(i.fr);
+  const tryVoice = () => {
+    const voices = window.speechSynthesis.getVoices();
+    const fv = voices.find(v => v.lang === 'fr-FR') || voices.find(v => v.lang.startsWith('fr'));
+    if (fv) u.voice = fv;
+  };
+  tryVoice();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = tryVoice;
+  }
+  u.onend = u.onerror = () => { speaking = null; refreshCard(id); };
+  window.speechSynthesis.speak(u);
+}
 
-        const copyBtn = document.createElement('button');
-        copyBtn.className = "p-2 hover:bg-slate-50 text-slate-400 hover:text-slate-600 rounded-xl transition-all";
-        copyBtn.innerHTML = `<i data-lucide="copy" class="w-5 h-5"></i>`;
-        copyBtn.onclick = () => copyToClipboard(i.fr);
+// ── COPY ──────────────────────────────────────────────────────────────────
+function copyPhrase(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  addRecent(id);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(item.fr).then(() => showToast('Copied!'));
+  } else {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = item.fr;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied!');
+  }
+}
 
-        rightCol.appendChild(speakBtn);
-        rightCol.appendChild(copyBtn);
-        topRow.appendChild(leftCol);
-        topRow.appendChild(rightCol);
+// ── FAVOURITES ────────────────────────────────────────────────────────────
+function toggleFav(id) {
+  if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
+  localStorage.setItem('gdp_favs', JSON.stringify([...favorites]));
+  refreshCard(id);
+  showToast(favorites.has(id) ? '★ Added to favourites' : 'Removed from favourites');
+  if (activeCat === '⭐ favorites') render();
+}
 
-        const btmRow = document.createElement('div');
-        btmRow.className = "border-t border-slate-50 pt-2 text-[10px] text-slate-400 leading-normal";
-        btmRow.innerHTML = `<span class="font-bold text-slate-600">Context:</span> ${i.ctx}`;
+// ── RECENT ────────────────────────────────────────────────────────────────
+function addRecent(id) {
+  recentIds = [id, ...recentIds.filter(x => x !== id)].slice(0, 20);
+  localStorage.setItem('gdp_recent', JSON.stringify(recentIds));
+}
 
-        d.appendChild(topRow);
-        d.appendChild(btmRow);
-        list.appendChild(d);
-      });
-      lucide.createIcons();
-    }
+// ── REFRESH SINGLE CARD ───────────────────────────────────────────────────
+function refreshCard(id) {
+  const el = document.getElementById(`card-${id}`);
+  if (!el) return;
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  // just replace the card in place
+  const tmp = document.createElement('div');
+  tmp.innerHTML = buildCard(item, 0);
+  const newCard = tmp.firstElementChild;
+  newCard.style.animation = 'none'; // no re-animate on refresh
+  el.replaceWith(newCard);
+}
 
-    function speak(t) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(t);
-        u.lang = 'fr-FR';
+// ── SHEETS ────────────────────────────────────────────────────────────────
+function openSheet(name) {
+  const prefix = name === 'emergency' ? 'em' : 'in';
+  document.getElementById(prefix+'-overlay').classList.add('open');
+  document.getElementById(prefix+'-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(name) {
+  const prefix = name === 'emergency' ? 'em' : 'in';
+  document.getElementById(prefix+'-overlay').classList.remove('open');
+  document.getElementById(prefix+'-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
-        const setVoice = () => {
-          const voices = window.speechSynthesis.getVoices();
-          const fv = voices.find(v => v.lang.startsWith('fr') || v.lang.includes('FR'));
-          if (fv) u.voice = fv;
-        };
+// ── TOAST ─────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
 
-        setVoice();
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-          window.speechSynthesis.onvoiceschanged = setVoice;
-        }
+// ── SERVICE WORKER ────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 
-        window.speechSynthesis.speak(u);
-      } else {
-        showToast("Audio voice engine unavailable");
-      }
-    }
-
-    function copyToClipboard(t) {
-      const el = document.createElement("textarea");
-      el.value = t;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      showToast("Phrase copied!");
-    }
-
-    // TOAST LOGGER
-    function showToast(m) {
-      const toast = document.getElementById('toast');
-      toast.innerText = m || "Copied!";
-      toast.classList.remove('opacity-0', 'pointer-events-none');
-      toast.classList.add('opacity-100');
-      setTimeout(() => {
-        toast.classList.remove('opacity-100');
-        toast.classList.add('opacity-0', 'pointer-events-none');
-      }, 1500);
-    }
-
-    function handleSearch() { renderDict(); }
-
-    function toggleEmergencyModal(show) {
-      const modal = document.getElementById('emergency-modal');
-      const inner = modal.querySelector('div');
-      if (show) {
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modal.classList.add('opacity-100');
-        inner.classList.remove('translate-y-full');
-        inner.classList.add('translate-y-0');
-      } else {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modal.classList.remove('opacity-100');
-        inner.classList.add('translate-y-full');
-      }
-    }
-
-    function toggleInfoModal(show) {
-      const modal = document.getElementById('info-modal');
-      const inner = modal.querySelector('div');
-      if (show) {
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modal.classList.add('opacity-100');
-        inner.classList.remove('translate-y-full');
-        inner.classList.add('translate-y-0');
-      } else {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modal.classList.remove('opacity-100');
-        inner.classList.add('translate-y-full');
-      }
-    }
-
-    window.onload = () => {
-      loadDatabase();
-    };
-  </script>
+window.onload = init;
+</script>
 </body>
 </html>
