@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide de Poche — Admin Console</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #ffffff; color: #1a1a22; min-height: 100vh; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #c8c8d8; border-radius: 2px; }
+  .panel { background: #ffffff; border: 1px solid #dddde8; border-radius: 12px; }
+  .panel-inner { background: #f4f4f8; border: 1px solid #dddde8; border-radius: 8px; }
+  input, select, textarea {
+    background: #f5f5f8; border: 1px solid #dddde8; color: #1a1a22;
+    border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; transition: border-color 0.15s; outline: none; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color: #4080e0; }
+  textarea { resize: vertical; line-height: 1.5; }
+  select option { background: #ffffff; }
+  .btn {
+    border: 1px solid #dddde8; background: #f4f4f8; color: #444452;
+    border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 500;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.15s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+  .btn:hover { background: #f0f0f8; border-color: #3a3a42; color: #1a1a22; }
+  .btn:active { transform: scale(0.98); }
+  .btn.primary { background: #e8eeff; border-color: #a0b8f0; color: #1a40c0; }
+  .btn.primary:hover { background: #d8e4ff; border-color: #8090e0; color: #1030a0; }
+  .btn.success { background: #e8f5ee; border-color: #90d0a8; color: #186030; }
+  .btn.success:hover { background: #d8eee0; border-color: #70c090; color: #104820; }
+  .btn.danger { background: #fde8ec; border-color: #f0a0b0; color: #a02040; }
+  .btn.danger:hover { background: #fcd8de; border-color: #e08090; color: #801830; }
+  .btn.amber { background: #fef5e0; border-color: #f0c870; color: #805010; }
+  .btn.amber:hover { background: #fdeec8; border-color: #e0b050; color: #604008; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .cat-badge {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 4px; border: 1px solid; white-space: nowrap;
+  }
+  .cat-social    { background:#eeeeff;border-color:#b0b0e8;color:#3838b0; }
+  .cat-dining    { background:#fff3e8;border-color:#f0c090;color:#8a4a10; }
+  .cat-shopping  { background:#edf8ef;border-color:#90d0a0;color:#1a6030; }
+  .cat-salon     { background:#fdeeff;border-color:#e0a0e8;color:#802090; }
+  .cat-driving   { background:#f2f2f4;border-color:#c0c0cc;color:#404050; }
+  .cat-directions{ background:#e8f8fa;border-color:#80c8d0;color:#1a6070; }
+  .cat-transit   { background:#fafae8;border-color:#d0d080;color:#606010; }
+  .cat-emergency { background:#fff0f0;border-color:#f0a0a0;color:#901818; }
+  .cat-culture   { background:#f0f0ff;border-color:#b0b0e0;color:#303090; }
+  .cat-events    { background:#fff0f4;border-color:#f0a0b8;color:#901840; }
+  .source-badge { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding:1px 5px;border-radius:3px; }
+  .src-claude { background:#deeeff;color:#1060c0;border:1px solid #a0c0f0; }
+  .src-web    { background:#f0deff;color:#7020b0;border:1px solid #d0a0f0; }
+  .translation-card { background:#f5f5f8;border:1px solid #dddde8;border-radius:8px;padding:14px 16px;cursor:pointer;transition:all 0.15s; }
+  .translation-card:hover { border-color:#4080e0;background:#f0f4ff; }
+  .translation-card.selected { border-color:#4080e0;background:#eaefff; }
+  .translation-card.selected .card-header { color:#3060d0; }
+  .spinner { display:inline-block;width:13px;height:13px;border:2px solid #333;border-top-color:#4f8ef7;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .toast { position:fixed;bottom:24px;right:24px;background:#ffffff;border:1px solid #dddde8;color:#1a1a22;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none;z-index:200; }
+  .toast.show { opacity:1;transform:translateY(0); }
+  .toast.ok  { border-color:#184020;color:#50b068; }
+  .toast.err { border-color:#401520;color:#b04060; }
+  .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s; }
+  .modal-overlay.open { opacity:1;pointer-events:all; }
+  .modal { background:#ffffff;border:1px solid #dddde8;border-radius:16px;padding:28px;width:660px;max-width:95vw;max-height:90vh;overflow-y:auto; }
+  .tab-btn { padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;border:none;background:transparent;color:#666678;font-family:'DM Sans',sans-serif; }
+  .tab-btn.active { background:#e8eaf8;color:#4050a0; }
+
+  /* INLINE EDIT ROW */
+  .entry-row { border-bottom:1px solid #1a1a22;display:grid;grid-template-columns:32px 100px 1fr 1fr 1fr 96px;gap:8px;align-items:start;transition:background 0.1s; }
+  .entry-row:hover { background:#f0f0f8; }
+  .entry-row:last-child { border-bottom:none; }
+  .entry-row.editing { background:#f8f8ff;border:1px solid #2a3a60;border-radius:8px;margin:4px 0; }
+  .cell-view { padding:10px 6px;font-size:13px;cursor:pointer;border-radius:4px;min-height:38px;line-height:1.5; }
+  .cell-view:hover { background:#ebebf5; }
+  .cell-view.editing-active { display:none; }
+  .cell-input { display:none;padding:4px 0; }
+  .cell-input.editing-active { display:block; }
+  .cell-input input, .cell-input textarea, .cell-input select { font-size:13px;padding:6px 8px; }
+  .inline-save-row { display:none;padding:6px 8px 10px;gap:6px;align-items:center; }
+  .inline-save-row.visible { display:flex; }
+  .fr-val { color:#1a1a22;font-weight:500; }
+  .en-val { color:#444460; }
+  .ctx-val { color:#888898;font-size:11px;line-height:1.5;margin-top:2px; }
+  .num-id { color:#aaaabc;font-size:11px;font-family:'IBM Plex Mono',monospace; }
+  .muted-label { font-size:10px;color:#888898;text-transform:uppercase;letter-spacing:0.08em;font-weight:600; }
+
+  /* SEARCH BAR */
+  #main-search { font-size:14px;padding:10px 16px 10px 40px;border-radius:10px;background:#ffffff;border-color:#dddde8; }
+  #main-search:focus { border-color:#4080e0; }
+  .cat-pill { padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;transition:all 0.12s;border:1px solid #dddde8;background:transparent;color:#666678;font-family:'DM Sans',sans-serif;white-space:nowrap; }
+  .cat-pill.active { background:#e0eaff;border-color:#90b0f0;color:#2050c0; }
+  .cat-pill:hover { background:#eeeefc;color:#4050a0; }
+  /* PASSWORD GATE */
+  #gate-overlay {
+    position:fixed;inset:0;background:#f8f8fc;z-index:9999;
+    display:flex;align-items:center;justify-content:center;
+  }
+  #gate-box {
+    background:#fff;border:1px solid #dddde8;border-radius:16px;
+    padding:36px 40px;width:340px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);
+  }
+  #gate-box h2 { font-size:18px;font-weight:600;color:#1a1a22;margin:0 0 4px; }
+  #gate-box p  { font-size:12px;color:#888898;margin:0 0 20px; }
+  #gate-input  { text-align:center;font-size:15px;letter-spacing:0.12em;margin-bottom:10px; }
+  #gate-btn    { width:100%;padding:10px;background:#e8eeff;border:1px solid #a0b8f0;color:#1a40c0;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s; }
+  #gate-btn:hover { background:#d8e4ff; }
+  #gate-error  { font-size:11px;color:#a02040;min-height:16px;margin-top:6px; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate-overlay">
+  <div id="gate-box">
+    <div style="font-size:28px;margin-bottom:12px">🗝️</div>
+    <h2>Guide de Poche</h2>
+    <p>Admin Console — enter password to continue</p>
+    <input id="gate-input" type="password" placeholder="••••••••" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')checkPassword()">
+    <button id="gate-btn" onclick="checkPassword()">Unlock</button>
+    <div id="gate-error"></div>
+  </div>
+</div>
+
+<div style="height:3px;background:linear-gradient(90deg,#2244aa 33%,#2a2a2a 33%,#2a2a2a 66%,#992233 66%)"></div>
+
+<!-- TOP NAV -->
+<div style="background:#f5f5f8;border-bottom:1px solid #e8e8f0;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div style="background:#e8eeff;border:1px solid #b0c0e8;border-radius:8px;padding:6px">
+      <i data-lucide="settings-2" style="width:15px;height:15px;color:#3060d0"></i>
+    </div>
+    <div>
+      <div style="font-size:14px;font-weight:600;color:#1a1a22;letter-spacing:-0.01em">Guide de Poche</div>
+      <div style="font-size:10px;color:#888898;font-family:'IBM Plex Mono',monospace">admin console</div>
+    </div>
+  </div>
+
+  <!-- WORKER URL (hardcoded in JS — edit WORKER_URL constant) -->
+  <div style="flex:1;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #dddde8;border-radius:8px;padding:6px 12px;max-width:380px">
+    <i data-lucide="cable" style="width:13px;height:13px;color:#aaaabc;flex-shrink:0"></i>
+    <span id="worker-url-display" style="flex:1;font-size:12px;color:#888898;font-family:'IBM Plex Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">not configured</span>
+    <span id="worker-status" style="font-size:10px;white-space:nowrap;flex-shrink:0"></span>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+    <span id="db-count" style="font-size:11px;color:#888898;font-family:'IBM Plex Mono',monospace"></span>
+    <input type="file" id="db-file-input" accept=".json" style="display:none" onchange="loadDB(event)">
+    <input type="file" id="inbox-file-input" accept=".json" style="display:none" onchange="importInbox(event)">
+    <button class="btn amber" onclick="document.getElementById('db-file-input').click()">
+      <i data-lucide="upload" style="width:12px;height:12px"></i> Load DB
+    </button>
+    <button class="btn" onclick="document.getElementById('inbox-file-input').click()" title="Import saved translations from the app inbox">
+      <i data-lucide="inbox" style="width:12px;height:12px"></i> Import Inbox
+    </button>
+    <button class="btn success" onclick="exportDB()">
+      <i data-lucide="download" style="width:12px;height:12px"></i> Export DB
+    </button>
+    <button class="btn primary" onclick="openAddModal()">
+      <i data-lucide="plus" style="width:12px;height:12px"></i> Add Entry
+    </button>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT: sidebar + content -->
+<div style="display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 43px)">
+
+  <!-- SIDEBAR -->
+  <div style="border-right:1px solid #e8e8f0;padding:14px;display:flex;flex-direction:column;gap:16px;position:sticky;top:43px;height:calc(100vh - 43px);overflow-y:auto">
+
+    <!-- STATS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div class="panel-inner" style="padding:10px;text-align:center">
+        <div id="s-total" style="font-size:18px;font-weight:600;color:#1a1a22;font-family:'IBM Plex Mono',monospace">—</div>
+        <div style="font-size:9px;color:#888898;text-transform:uppercase;letter-spacing:0.08em;margin-top:1px">Total</div>
+      </div>
+      <div class="panel-inner" style="padding:10px;text-align:center">
+        <div id="s-shown" style="font-size:18px;font-weight:600;color:#70c080;font-family:'IBM Plex Mono',monospace">—</div>
+        <div style="font-size:9px;color:#888898;text-transform:uppercase;letter-spacing:0.08em;margin-top:1px">Shown</div>
+      </div>
+      <div class="panel-inner" style="padding:10px;text-align:center">
+        <div id="s-added" style="font-size:18px;font-weight:600;color:#c09040;font-family:'IBM Plex Mono',monospace">0</div>
+        <div style="font-size:9px;color:#888898;text-transform:uppercase;letter-spacing:0.08em;margin-top:1px">Added</div>
+      </div>
+      <div class="panel-inner" style="padding:10px;text-align:center">
+        <div id="s-edited" style="font-size:18px;font-weight:600;color:#9060b0;font-family:'IBM Plex Mono',monospace">0</div>
+        <div style="font-size:9px;color:#888898;text-transform:uppercase;letter-spacing:0.08em;margin-top:1px">Edited</div>
+      </div>
+    </div>
+
+    <!-- EN→FR QUICK LOOKUP -->
+    <div style="padding-bottom:14px;border-bottom:1px solid #e8e8f0">
+      <div class="muted-label" style="margin-bottom:2px">EN → FR Lookup</div>
+      <div style="font-size:10px;color:#888898;margin-bottom:8px">Type English, get French</div>
+      <input id="quick-en" type="text" placeholder="e.g. Where is the exit?" oninput="qTranslateDebounce()" style="font-size:12px">
+      <div style="min-height:16px;margin-top:6px">
+        <div id="quick-result" style="font-size:12px;color:#2060c0;font-weight:500;line-height:1.5"></div>
+        <div id="quick-add-row" style="display:none;margin-top:8px">
+          <button class="btn success" onclick="addFromLookup()" style="font-size:11px;padding:5px 10px;width:100%">
+            + Add as new entry
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORY FILTER -->
+    <div>
+      <div class="muted-label" style="margin-bottom:6px">Category</div>
+      <div id="cat-list" style="display:flex;flex-direction:column;gap:2px"></div>
+    </div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+
+    <!-- SEARCH + SORT BAR -->
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="position:relative;flex:1">
+        <i data-lucide="search" style="width:14px;height:14px;position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#888898;pointer-events:none"></i>
+        <input id="main-search" type="text" placeholder="Search French, English, or context…" oninput="renderEntries()">
+      </div>
+      <button class="btn" onclick="cycleSort()" style="padding:6px 12px">
+        <i data-lucide="arrow-up-down" style="width:12px;height:12px"></i>
+        <span id="sort-label">ID</span>
+      </button>
+    </div>
+
+    <!-- CATEGORY PILLS (horizontal) -->
+    <div id="cat-pills" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+
+    <!-- TABLE -->
+    <div class="panel" style="flex:1">
+      <!-- header -->
+      <div style="display:grid;grid-template-columns:32px 100px 1fr 1fr 1fr 96px;gap:8px;padding:8px 12px;border-bottom:1px solid #1e1e24">
+        <div class="muted-label">#</div>
+        <div class="muted-label">Cat</div>
+        <div class="muted-label">French</div>
+        <div class="muted-label">English</div>
+        <div class="muted-label">Context</div>
+        <div class="muted-label">Actions</div>
+      </div>
+      <div id="entry-list" style="padding:0 6px;overflow-y:auto;max-height:calc(100vh - 230px)"></div>
+    </div>
+
+    <div style="font-size:11px;color:#44444c">
+      <i data-lucide="info" style="width:11px;height:11px;display:inline;vertical-align:middle"></i>
+      Click any cell to edit it inline. Press <kbd style="background:#1f1f28;border:1px solid #dddde8;padding:1px 5px;border-radius:3px;font-size:10px">Esc</kbd> to cancel.
+    </div>
+  </div>
+</div>
+
+<!-- ADD ENTRY MODAL -->
+<div id="add-modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-size:16px;font-weight:600;color:#1a1a22" id="modal-title">Add New Entry</div>
+        <div style="font-size:11px;color:#888898;margin-top:2px" id="modal-subtitle">Translate English → French and add to the database</div>
+      </div>
+      <button class="btn" onclick="closeModal()" style="padding:5px 8px"><i data-lucide="x" style="width:13px;height:13px"></i></button>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-bottom:16px;padding:4px;background:#f5f5f8;border-radius:8px;width:fit-content">
+      <button class="tab-btn active" id="tab-translate" onclick="switchTab('translate')">Translate EN→FR</button>
+      <button class="tab-btn" id="tab-manual" onclick="switchTab('manual')">Manual</button>
+    </div>
+
+    <!-- TRANSLATE PANE -->
+    <div id="pane-translate">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">English Phrase <span style="color:#3060d0">*</span></label>
+            <textarea id="t-en" rows="2" placeholder="e.g. I would like a table for two" oninput="onEnInput()"></textarea>
+          </div>
+          <div>
+            <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">Category <span style="color:#3060d0">*</span></label>
+            <select id="t-cat">
+              <option value="social">Social</option><option value="dining">Dining</option>
+              <option value="shopping">Shopping</option><option value="salon">Salon</option>
+              <option value="driving">Driving</option><option value="directions">Directions</option>
+              <option value="transit">Transit</option><option value="emergency">Emergency</option>
+              <option value="culture">Culture</option><option value="events">Events</option>
+            </select>
+            <div style="margin-top:6px">
+              <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">Or new category</label>
+              <input id="t-newcat" type="text" placeholder="e.g. accommodation">
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn amber" id="btn-web" onclick="translateWeb()" disabled>
+              <i data-lucide="globe" style="width:12px;height:12px"></i> Web — quick
+            </button>
+            <button class="btn primary" id="btn-claude" onclick="translateClaude()" disabled>
+              <i data-lucide="sparkles" style="width:12px;height:12px"></i> Claude — with context
+            </button>
+            <div id="trans-status" style="font-size:11px;color:#888898"></div>
+        </div>
+        <div id="translation-results" style="display:none">
+          <div style="font-size:11px;color:#666678;margin-bottom:8px">Select a result:</div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="results-cards"></div>
+        </div>
+        <div id="selected-editor" style="display:none">
+          <div style="font-size:11px;color:#3060d0;margin-bottom:10px;display:flex;align-items:center;gap:5px">
+            <i data-lucide="check-circle" style="width:12px;height:12px"></i> Selected — review then save
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div>
+              <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">French Translation</label>
+              <input id="sel-fr" type="text">
+            </div>
+            <div>
+              <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">Situational Context</label>
+              <textarea id="sel-ctx" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANUAL PANE -->
+    <div id="pane-manual" style="display:none">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">French Phrase <span style="color:#3060d0">*</span></label>
+          <input id="m-fr" type="text" placeholder="e.g. Je voudrais une table pour deux">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">English Translation <span style="color:#3060d0">*</span></label>
+          <input id="m-en" type="text" placeholder="e.g. I would like a table for two">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">Situational Context <span style="color:#3060d0">*</span></label>
+          <textarea id="m-ctx" rows="2" placeholder="When and how to use this phrase..."></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">Category</label>
+            <select id="m-cat">
+              <option value="social">Social</option><option value="dining">Dining</option>
+              <option value="shopping">Shopping</option><option value="salon">Salon</option>
+              <option value="driving">Driving</option><option value="directions">Directions</option>
+              <option value="transit">Transit</option><option value="emergency">Emergency</option>
+              <option value="culture">Culture</option><option value="events">Events</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:#666678;display:block;margin-bottom:4px">Or new category</label>
+            <input id="m-newcat" type="text" placeholder="e.g. accommodation">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid #1e1e24">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn success" onclick="saveEntry()">
+        <i data-lucide="check" style="width:12px;height:12px"></i> <span id="modal-save-label">Add to Database</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div id="del-modal" class="modal-overlay" onclick="if(event.target===this)closeDelModal()">
+  <div class="modal" style="width:400px">
+    <div style="font-size:15px;font-weight:600;color:#1a1a22;margin-bottom:8px">Delete Entry?</div>
+    <div style="font-size:12px;color:#666678;margin-bottom:20px" id="del-phrase"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn" onclick="closeDelModal()">Cancel</button>
+      <button class="btn danger" onclick="confirmDelete()"><i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.395.0/dist/umd/lucide.min.js"></script>
+<script>
+// ── PASSWORD GATE ─────────────────────────────────────────────────────────
+// Change this to whatever password you want:
+const ADMIN_PASSWORD = 'france2025';
+const SESSION_KEY = 'gdp_admin_auth';
+
+function checkPassword() {
+  const val = document.getElementById('gate-input').value;
+  if (val === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('gate-overlay').style.display = 'none';
+    init();
+    restoreApiKey();
+  } else {
+    const err = document.getElementById('gate-error');
+    err.textContent = 'Incorrect password.';
+    document.getElementById('gate-input').value = '';
+    document.getElementById('gate-input').focus();
+    setTimeout(() => { err.textContent = ''; }, 2500);
+  }
+}
+
+function gateInit() {
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    document.getElementById('gate-overlay').style.display = 'none';
+    init();
+    restoreApiKey();
+  } else {
+    setTimeout(() => document.getElementById('gate-input').focus(), 100);
+  }
+}
+
+const INITIAL_DATA = [{"id":1,"category":"social","fr":"Bonjour","en":"Good morning / Hello","ctx":"The essential polite greeting. Say this immediately upon entering any shop."},{"id":2,"category":"social","fr":"Bonsoir","en":"Good evening","ctx":"Use this instead of Bonjour starting around 5:00 PM."},{"id":3,"category":"social","fr":"S'il vous plaît","en":"Please","ctx":"Always append this to any request or order."},{"id":4,"category":"social","fr":"Merci beaucoup","en":"Thank you very much","ctx":"Standard polite gratitude."},{"id":5,"category":"social","fr":"De rien","en":"You're welcome / It's nothing","ctx":"The standard friendly response to 'Merci'."},{"id":6,"category":"social","fr":"Excusez-moi, j'ai un petit contretemps.","en":"Excuse me, I have a minor unexpected delay.","ctx":"Polite phrase to warn a host or restaurant that you are running slightly late."},{"id":7,"category":"social","fr":"Vous","en":"Formal 'You'","ctx":"Always use this pronoun with shopkeepers, servers, and strangers."},{"id":8,"category":"social","fr":"Le quart d'heure de politesse","en":"The polite 15 minutes","ctx":"Cultural norm: arrive 15 minutes late to dinner at private homes, never early."},{"id":9,"category":"social","fr":"Enchanté / Enchantée","en":"Nice to meet you","ctx":"Said when introduced to someone new."},{"id":10,"category":"social","fr":"Parlez-vous anglais ?","en":"Do you speak English?","ctx":"Polite inquiry before switching languages."},{"id":11,"category":"dining","fr":"Une carafe d'eau, s'il vous plaît","en":"A pitcher of tap water, please","ctx":"How to get free water at restaurants. Avoid asking for 'un verre d'eau'."},{"id":12,"category":"dining","fr":"L'addition, s'il vous plaît","en":"The bill, please","ctx":"Request this when ready to leave. Servers will not bring it automatically."},{"id":13,"category":"dining","fr":"Un café noisette","en":"An espresso with a drop of milk","ctx":"Like an Italian macchiato. Perfect mid-day coffee order."},{"id":14,"category":"dining","fr":"Une fourchette, un couteau, et une cuillère","en":"A fork, a knife, and a spoon","ctx":"Silverware/utensils for the table."},{"id":15,"category":"dining","fr":"Est-ce que je peux avoir une serviette?","en":"Can I have a napkin?","ctx":"Requesting an extra napkin at the table."},{"id":16,"category":"dining","fr":"Je suis végétarien (m) / végétarienne (f)","en":"I am vegetarian","ctx":"Dietary restriction declaration."},{"id":17,"category":"dining","fr":"Saignante, à point, bien cuite","en":"Rare, medium, well-done","ctx":"Steak cooking temperatures."},{"id":18,"category":"dining","fr":"Un pichet de vin maison (rouge / blanc)","en":"A pitcher of house wine (red / white)","ctx":"A cost-effective, high-quality dining option."},{"id":19,"category":"dining","fr":"La Formule Midi","en":"Lunch special set menu","ctx":"Set lunchtime menu offering excellent value."},{"id":20,"category":"dining","fr":"Le plat du jour","en":"The daily special","ctx":"The chef's special dish for the day."},{"id":21,"category":"dining","fr":"C'est épicé ?","en":"Is this spicy?","ctx":"Ask to verify if a dish contains spicy seasoning."},{"id":22,"category":"dining","fr":"Je suis allergique aux fruits à coque.","en":"I am allergic to tree nuts.","ctx":"Crucial dietary warning."},{"id":23,"category":"dining","fr":"Ce sera tout, merci.","en":"That will be all, thank you.","ctx":"Polite way to decline more food/drinks at the end of a meal."},{"id":24,"category":"dining","fr":"Un verre de vin rouge, s'il vous plaît.","en":"A glass of red wine, please.","ctx":"Ordering wine by the glass."},{"id":25,"category":"dining","fr":"Où sont les toilettes ?","en":"Where are the restrooms?","ctx":"Finding the bathroom in a dining venue."},{"id":26,"category":"shopping","fr":"Où sont les cabines d'essayage?","en":"Where are the fitting rooms?","ctx":"Finding rooms to try on garments."},{"id":27,"category":"shopping","fr":"Puis-je l'essayer?","en":"Can I try it on?","ctx":"Ask before entering fitting rooms."},{"id":28,"category":"shopping","fr":"La taille au-dessus / au-dessous","en":"The size up / size down","ctx":"Ask for a larger or smaller garment size."},{"id":29,"category":"shopping","fr":"C'est trop grand / trop petit","en":"It's too big / too small","ctx":"Describing the fit of clothing."},{"id":30,"category":"shopping","fr":"Je le prends / Je l'achète","en":"I'll take it / I'm buying it","ctx":"Confirming a purchase to an associate."},{"id":31,"category":"shopping","fr":"La caisse","en":"The register / checkout","ctx":"Look for this sign when ready to pay."},{"id":32,"category":"shopping","fr":"Je regarde juste, merci","en":"I'm just looking, thank you","ctx":"Decline sales assistance politely."},{"id":33,"category":"shopping","fr":"C'est en solde?","en":"Is this on sale?","ctx":"Checking for discounts."},{"id":34,"category":"shopping","fr":"Deuxième démarque","en":"Second markdown","ctx":"Signifies deeper price cuts during official sale seasons."},{"id":35,"category":"shopping","fr":"Un Bureau de Tabac","en":"Tobacco and convenience shop","ctx":"Sells transit tickets, newspapers, and stamps."},{"id":36,"category":"shopping","fr":"Une Librairie","en":"A bookstore","ctx":"False friend: this is a bookstore, not a library (bibliothèque)."},{"id":37,"category":"shopping","fr":"Une Papeterie","en":"A stationery shop","ctx":"Sells pens, paper, and office supplies."},{"id":38,"category":"shopping","fr":"Boulangerie vs. Dépôt de pain","en":"Bakery vs. Bread Depot","ctx":"A Boulangerie must bake its bread fresh on the premises."},{"id":39,"category":"shopping","fr":"Puis-je payer par carte ?","en":"Can I pay by card?","ctx":"Confirming payment method in smaller shops."},{"id":40,"category":"shopping","fr":"Je voudrais un sac, s'il vous plaît.","en":"I would like a bag, please.","ctx":"Requesting a shopping bag at checkout."},{"id":41,"category":"salon","fr":"Je voudrais prendre rendez-vous.","en":"I would like to make an appointment.","ctx":"Booking salon services."},{"id":42,"category":"salon","fr":"Juste les pointes, s'il vous plaît.","en":"Just the ends, please.","ctx":"Requesting a simple trim."},{"id":43,"category":"salon","fr":"Pas trop court, s'il vous plaît.","en":"Not too short, please.","ctx":"Specifying length preference."},{"id":44,"category":"salon","fr":"Une coupe et un brushing","en":"A cut and a blow-dry","ctx":"Standard hair salon request."},{"id":45,"category":"salon","fr":"Une coloration","en":"Hair coloring","ctx":"Requesting a color treatment."},{"id":46,"category":"salon","fr":"Un shampooing, s'il vous plaît.","en":"A shampoo, please.","ctx":"Included or requested wash before styling."},{"id":47,"category":"salon","fr":"Combien ça coûte ?","en":"How much does it cost?","ctx":"Confirming rates before beginning styling."},{"id":48,"category":"salon","fr":"Est-ce qu'il y a de l'attente ?","en":"Is there a wait?","ctx":"Inquiring about walk-in times."},{"id":49,"category":"salon","fr":"Je voudrais une frange.","en":"I would like bangs.","ctx":"Requesting specific styling change."},{"id":50,"category":"salon","fr":"Une coupe dégradée","en":"A layered cut","ctx":"Requesting layered haircut styling."},{"id":51,"category":"driving","fr":"Priorité à droite","en":"Priority to the right","ctx":"Yield right-of-way to vehicles coming from your right."},{"id":52,"category":"driving","fr":"Plein à plein","en":"Full to full","ctx":"Fuel rental policy; return with a fully filled tank."},{"id":53,"category":"driving","fr":"Gazole","en":"Diesel","ctx":"Pumps marked Gazole are diesel. Do not use Sans Plomb."},{"id":54,"category":"driving","fr":"Un horodateur","en":"Street parking payment terminal","ctx":"Look for this when parked in a 'PAYANT' street."},{"id":55,"category":"driving","fr":"Un disque de stationnement","en":"Parking time disc","ctx":"Required for restricted free 'Zone Bleue' parking."},{"id":56,"category":"driving","fr":"Caisse Automatique","en":"Automatic pay station","ctx":"Pay on foot before returning to your car in garages."},{"id":57,"category":"driving","fr":"La voie avec le symbole de carte bancaire","en":"Toll lane for credit cards","ctx":"Use this lane for fast credit card highway payments."},{"id":58,"category":"driving","fr":"Paiement par carte uniquement","en":"Payment by card only","ctx":"Automated night-pumps require payment directly at the terminal."},{"id":59,"category":"driving","fr":"Où est le parking le plus proche ?","en":"Where is the nearest parking lot?","ctx":"Finding vehicle parking."},{"id":60,"category":"driving","fr":"Une amende","en":"A fine / ticket","ctx":"Issued for parking violations or transit evasion."},{"id":61,"category":"directions","fr":"Tout droit","en":"Straight ahead","ctx":"General direction instruction."},{"id":62,"category":"directions","fr":"À gauche / À droite","en":"To the left / To the right","ctx":"Turns."},{"id":63,"category":"directions","fr":"La deuxième rue à droite","en":"The second street on the right","ctx":"Typical directional feedback."},{"id":64,"category":"directions","fr":"Peut-on y aller à pied ?","en":"Can we go there on foot?","ctx":"Asking if a location is walkable."},{"id":65,"category":"directions","fr":"C'est loin d'ici ?","en":"Is it far from here?","ctx":"Inquiring about distances."},{"id":66,"category":"directions","fr":"Tournez au feu rouge","en":"Turn at the traffic light","ctx":"Navigational turn instruction."},{"id":67,"category":"directions","fr":"Traversez le pont","en":"Cross the bridge","ctx":"Navigational bridge crossing."},{"id":68,"category":"directions","fr":"Où est l'avenue... ?","en":"Where is Avenue...?","ctx":"Finding specific street paths."},{"id":69,"category":"directions","fr":"Prenez le rond-point","en":"Take the roundabout","ctx":"Navigational circle routing."},{"id":70,"category":"directions","fr":"C'est à côté","en":"It is next door / nearby","ctx":"Describing close proximity."},{"id":71,"category":"transit","fr":"Une correspondance","en":"A connection / transfer","ctx":"Changing trains, metros, or buses."},{"id":72,"category":"transit","fr":"Composter son billet","en":"To physically validate a train ticket","ctx":"Punch paper tickets in yellow machines before boarding regional trains."},{"id":73,"category":"transit","fr":"Le bouton d'arrêt demandé","en":"Stop requested button","ctx":"Press to ensure the bus pulls over at your stop."},{"id":74,"category":"transit","fr":"Une carte d'embarquement","en":"A boarding pass","ctx":"Airport security and gate boarding document."},{"id":75,"category":"transit","fr":"Excusez-moi, je crois que c'est ma place.","en":"Excuse me, I believe this is my seat.","ctx":"Polite seating correction on planes or trains."},{"id":76,"category":"transit","fr":"J'ai deux bagages à enregistrer.","en":"I have two bags to check.","ctx":"Airport counter check-in request."},{"id":77,"category":"transit","fr":"Un bagage à main","en":"A carry-on bag","ctx":"Luggage kept with you in the cabin."},{"id":78,"category":"transit","fr":"La porte d'embarquement","en":"The boarding gate","ctx":"Departure gate indicator."},{"id":79,"category":"transit","fr":"J'ai raté le bus.","en":"I missed the bus.","ctx":"Missed connection explanation."},{"id":80,"category":"transit","fr":"Un ticket de métro","en":"A subway ticket","ctx":"Single-use local transit pass."},{"id":81,"category":"emergency","fr":"La pharmacie de garde","en":"On-duty pharmacy","ctx":"The specific rotating pharmacy open on Sundays and nights."},{"id":82,"category":"emergency","fr":"J'ai la tête qui tourne","en":"I feel dizzy / My head is spinning","ctx":"Describing lightheadedness symptoms."},{"id":83,"category":"emergency","fr":"Un médicament pour la tête","en":"Headache medicine / Painkiller","ctx":"Asking for common painkillers at a pharmacy."},{"id":84,"category":"emergency","fr":"J'ai besoin d'un médecin.","en":"I need a doctor.","ctx":"Summoning medical attention."},{"id":85,"category":"emergency","fr":"Appelez une ambulance, s'il vous plaît.","en":"Call an ambulance, please.","ctx":"Emergency health help."},{"id":86,"category":"emergency","fr":"J'ai mal au ventre.","en":"I have a stomachache.","ctx":"Describing digestive illness."},{"id":87,"category":"emergency","fr":"Un pansement, s'il vous plaît.","en":"A bandage/plaster, please.","ctx":"Requesting dressing for cuts."},{"id":88,"category":"emergency","fr":"C'est grave ?","en":"Is it serious?","ctx":"Inquiring about medical gravity."},{"id":89,"category":"emergency","fr":"J'ai perdu mon passeport.","en":"I lost my passport.","ctx":"Handling travel identity crisis."},{"id":90,"category":"emergency","fr":"Où est la gendarmerie ?","en":"Where is the police station?","ctx":"Reporting crimes or issues."},{"id":91,"category":"culture","fr":"Un point de vue","en":"A scenic viewpoint","ctx":"A perfect landscape/photo stop."},{"id":92,"category":"culture","fr":"L'Office de Tourisme","en":"The Tourist Information Office","ctx":"Stop here for city maps and local guides."},{"id":93,"category":"culture","fr":"Quand a lieu le marché?","en":"When does the market take place?","ctx":"Catching local food markets."},{"id":94,"category":"culture","fr":"Un audio-guide","en":"An audio guide","ctx":"Museum translation explanation headset."},{"id":95,"category":"culture","fr":"Puis-je prendre des photos?","en":"Can I take pictures?","ctx":"Confirming photo rules inside monuments."},{"id":96,"category":"culture","fr":"Qu'est-ce qu'il y a à visiter ?","en":"What is there to visit?","ctx":"General sight-seeking query."},{"id":97,"category":"culture","fr":"C'est fermé le lundi ?","en":"Is it closed on Mondays?","ctx":"Confirming historic museum schedules."},{"id":98,"category":"culture","fr":"Où puis-je acheter les billets ?","en":"Where can I buy tickets?","ctx":"Acquiring monument entries."},{"id":99,"category":"culture","fr":"Le vestiaire","en":"The cloakroom","ctx":"Checking coats and bags inside museums."},{"id":100,"category":"culture","fr":"Une exposition temporaire","en":"A temporary exhibition","ctx":"Special non-permanent museum section."},{"id":101,"category":"events","fr":"Où est ma place ?","en":"Where is my seat?","ctx":"Finding your seat at stadiums or venues."},{"id":102,"category":"events","fr":"Pouvez-vous garder ma place ?","en":"Can you save my seat?","ctx":"Asking a neighbor to hold your spot."},{"id":103,"category":"events","fr":"Pouvez-vous surveiller mes affaires ?","en":"Can you watch my stuff?","ctx":"Asking a trusted neighbor to secure bags during a quick break."},{"id":104,"category":"events","fr":"Où sont les toilettes, s'il vous plaît ?","en":"Where are the restrooms, please?","ctx":"Finding bathrooms in a crowded stadium."},{"id":105,"category":"events","fr":"Où peut-on acheter à manger ou à boire ?","en":"Where can we buy food or drinks?","ctx":"Finding stadium concessions."},{"id":106,"category":"events","fr":"À quelle heure commence le spectacle ?","en":"What time does the show start?","ctx":"Confirming performance start times."},{"id":107,"category":"events","fr":"Où se trouve l'entrée principale ?","en":"Where is the main entrance?","ctx":"Finding access gates."},{"id":108,"category":"events","fr":"Le concert est complet.","en":"The concert is sold out.","ctx":"Ticketing notice."},{"id":109,"category":"events","fr":"Est-ce qu'il y a des consignes de sécurité ?","en":"Are there security checks?","ctx":"Checking queue protocols."},{"id":110,"category":"events","fr":"Où est la sortie de secours ?","en":"Where is the emergency exit?","ctx":"Emergency safety mapping."},{"id":111,"category":"salon","fr":"s'il vous plaît texturer mes cheveux","en":"please texturize my hair","ctx":"styling request"},{"id":112,"category":"driving","fr":"Ma voiture a un problème","en":"My car has a problem","ctx":"when the car has a mechanical problem"},{"id":113,"category":"driving","fr":"J'ai besoin d'une assistance routière","en":"I need roadside assistance","ctx":"when you have a car breakdown on the road"},{"id":114,"category":"driving","fr":"Veuillez vérifier mes pneus","en":"Please check my tires","ctx":"when the car tires need air"},{"id":115,"category":"driving","fr":"Remplissez-le s'il vous plaît.","en":"fill it up, please","ctx":"to fill up the gas tank"},{"id":116,"category":"social","fr":"j'ai oublié de","en":"I forgot to","ctx":"when I forgot to do something"},{"id":117,"category":"social","fr":"J'ai oublié les clés","en":"I forgot the keys","ctx":"when I forgot something"},{"id":118,"category":"social","fr":"J'ai perdu mes clés.","en":"I lost my keys","ctx":"when I lost something"},{"id":119,"category":"social","fr":"Mon français n'est pas bon, désolé","en":"My French is not good, sorry","ctx":"when not speaking French well"},{"id":120,"category":"social","fr":"Vous êtes très gentil","en":"You are very kind","ctx":"polite language"},{"id":121,"category":"shopping","fr":"Puis-je payer par carte crédit","en":"Can I pay with credit card","ctx":"when shopping with CC"},{"id":122,"category":"shopping","fr":"J'ai besoin de (lotion solaire)","en":"I need (suntan lotion)","ctx":"when shopping at a drug store"},{"id":123,"category":"social","fr":"Je recherche","en":"I am looking for","ctx":"when looking for something in the store or street"},{"id":124,"category":"social","fr":"Aidez-moi s'il vous plaît","en":"Help me please","ctx":"when needing help with something"},{"id":125,"category":"driving","fr":"Combien de temps faut-il","en":"How long does it take","ctx":"when asking about driving distance"},{"id":126,"category":"social","fr":"Il est très beau","en":"It is very beautiful here","ctx":"describing a place you think is pretty"}];
+
+let db = JSON.parse(JSON.stringify(INITIAL_DATA));
+let activeCat = 'all';
+let sortMode = 'id';
+let editingRowId = null;
+let pendingDeleteId = null;
+let addedCount = 0, editedCount = 0;
+let selectedTranslation = null;
+let currentTab = 'translate';
+let qtTimer = null;
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+function init() {
+  renderCatSidebar();
+  renderCatPills();
+  renderEntries();
+  updateStats();
+  lucide.createIcons();
+  document.addEventListener('keydown', e => { if (e.key==='Escape') cancelInlineEdit(); });
+}
+
+function allCats() { return [...new Set(db.map(e=>e.category.toLowerCase()))].sort(); }
+function catCount(c) { return db.filter(e=>e.category.toLowerCase()===c).length; }
+
+function renderCatSidebar() {
+  const el = document.getElementById('cat-list');
+  const cats = ['all', ...allCats()];
+  el.innerHTML = cats.map(c => {
+    const active = activeCat === c;
+    const count = c==='all' ? db.length : catCount(c);
+    return `<button onclick="setCat('${c}')" style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:6px;border:none;cursor:pointer;background:${active?'#e8eeff':'transparent'};color:${active?'#3060c0':'#666678'};font-size:12px;font-family:'DM Sans',sans-serif;font-weight:${active?500:400};transition:all 0.1s;width:100%;text-align:left">
+      <span style="text-transform:capitalize">${c==='all'?'All':c}</span>
+      <span style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:#404048">${count}</span>
+    </button>`;
+  }).join('');
+}
+
+function renderCatPills() {
+  const el = document.getElementById('cat-pills');
+  const cats = ['all', ...allCats()];
+  el.innerHTML = cats.map(c => {
+    const active = activeCat === c;
+    return `<button class="cat-pill${active?' active':''}" onclick="setCat('${c}')">${c==='all'?'All':c}</button>`;
+  }).join('');
+}
+
+function setCat(c) {
+  activeCat = c;
+  renderCatSidebar();
+  renderCatPills();
+  renderEntries();
+  updateStats();
+}
+
+// ── FILTERING & RENDERING ─────────────────────────────────────────────────
+function getFiltered() {
+  const q = (document.getElementById('main-search').value||'').toLowerCase().trim();
+  return db.filter(e => {
+    const inCat = activeCat==='all' || e.category.toLowerCase()===activeCat;
+    const inQ = !q || e.fr.toLowerCase().includes(q) || e.en.toLowerCase().includes(q) || (e.ctx||'').toLowerCase().includes(q);
+    return inCat && inQ;
+  }).sort((a,b) => {
+    if (sortMode==='id') return a.id - b.id;
+    if (sortMode==='az') return a.fr.localeCompare(b.fr);
+    if (sortMode==='za') return b.fr.localeCompare(a.fr);
+    if (sortMode==='cat') return a.category.localeCompare(b.category)||a.id-b.id;
+    return 0;
+  });
+}
+
+function renderEntries() {
+  updateStats();
+  const items = getFiltered();
+  const el = document.getElementById('entry-list');
+  if (!items.length) {
+    el.innerHTML = `<div style="padding:32px;text-align:center;color:#888898;font-size:13px">No entries match your search.</div>`;
+    lucide.createIcons(); return;
+  }
+  el.innerHTML = items.map(e => buildRow(e)).join('');
+  lucide.createIcons();
+}
+
+function buildRow(e) {
+  const isEditing = editingRowId === e.id;
+  const cats = allCats();
+  const catOptions = cats.map(c=>`<option value="${c}"${c===e.category?'selected':''}>${c}</option>`).join('');
+  return `
+<div class="entry-row${isEditing?' editing':''}" id="row-${e.id}">
+  <div style="padding:10px 4px"><span class="num-id">${e.id}</span></div>
+
+  <div>
+    <div class="cell-view${isEditing?' editing-active':''}" onclick="startEdit(${e.id},'cat')" title="Click to edit category">
+      <span class="cat-badge cat-${e.category.toLowerCase()}">${e.category}</span>
+    </div>
+    <div class="cell-input${isEditing?' editing-active':''}">
+      <select id="edit-cat-${e.id}" style="font-size:11px;padding:4px 6px">${catOptions}</select>
+    </div>
+  </div>
+
+  <div>
+    <div class="cell-view${isEditing?' editing-active':''}" onclick="startEdit(${e.id},'fr')" title="Click to edit">
+      <span class="fr-val">${esc(e.fr)}</span>
+    </div>
+    <div class="cell-input${isEditing?' editing-active':''}">
+      <textarea id="edit-fr-${e.id}" rows="2" style="font-size:13px">${esc(e.fr)}</textarea>
+    </div>
+  </div>
+
+  <div>
+    <div class="cell-view${isEditing?' editing-active':''}" onclick="startEdit(${e.id},'en')" title="Click to edit">
+      <span class="en-val">${esc(e.en)}</span>
+    </div>
+    <div class="cell-input${isEditing?' editing-active':''}">
+      <textarea id="edit-en-${e.id}" rows="2" style="font-size:13px">${esc(e.en)}</textarea>
+    </div>
+  </div>
+
+  <div>
+    <div class="cell-view${isEditing?' editing-active':''}" onclick="startEdit(${e.id},'ctx')" title="Click to edit">
+      <span class="ctx-val">${esc(e.ctx||'')}</span>
+    </div>
+    <div class="cell-input${isEditing?' editing-active':''}">
+      <textarea id="edit-ctx-${e.id}" rows="2" style="font-size:11px">${esc(e.ctx||'')}</textarea>
+    </div>
+  </div>
+
+  <div style="padding:8px 4px;display:flex;flex-direction:column;gap:4px;align-items:flex-start">
+    ${isEditing ? `
+      <button class="btn success" onclick="saveInlineEdit(${e.id})" style="padding:4px 8px;font-size:11px;width:100%">
+        <i data-lucide="check" style="width:11px;height:11px"></i> Save
+      </button>
+      <button class="btn" onclick="cancelInlineEdit()" style="padding:4px 8px;font-size:11px;width:100%">
+        <i data-lucide="x" style="width:11px;height:11px"></i> Cancel
+      </button>
+    ` : `
+      <button class="btn" onclick="startEdit(${e.id},'fr')" style="padding:4px 8px;font-size:11px;width:100%" title="Edit">
+        <i data-lucide="pencil" style="width:11px;height:11px"></i> Edit
+      </button>
+      <button class="btn danger" onclick="openDeleteModal(${e.id})" style="padding:4px 8px;font-size:11px;width:100%" title="Delete">
+        <i data-lucide="trash-2" style="width:11px;height:11px"></i>
+      </button>
+    `}
+  </div>
+</div>`;
+}
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── INLINE EDITING ────────────────────────────────────────────────────────
+function startEdit(id, focusField) {
+  if (editingRowId === id) return;
+  editingRowId = id;
+  renderEntries();
+  // focus the right field
+  setTimeout(() => {
+    const el = document.getElementById(`edit-${focusField}-${id}`);
+    if (el) { el.focus(); el.select && el.select(); }
+    // scroll row into view
+    const row = document.getElementById(`row-${id}`);
+    if (row) row.scrollIntoView({block:'nearest', behavior:'smooth'});
+  }, 30);
+}
+
+function saveInlineEdit(id) {
+  const idx = db.findIndex(e=>e.id===id);
+  if (idx < 0) return;
+  const fr  = document.getElementById(`edit-fr-${id}`).value.trim();
+  const en  = document.getElementById(`edit-en-${id}`).value.trim();
+  const ctx = document.getElementById(`edit-ctx-${id}`).value.trim();
+  const cat = document.getElementById(`edit-cat-${id}`).value;
+  if (!fr || !en) { showToast('French and English are required', 'err'); return; }
+  db[idx] = { ...db[idx], fr, en, ctx, category: cat };
+  editedCount++;
+  editingRowId = null;
+  renderCatSidebar(); renderCatPills(); renderEntries();
+  showToast('Entry saved', 'ok');
+}
+
+function cancelInlineEdit() {
+  if (!editingRowId) return;
+  editingRowId = null;
+  renderEntries();
+}
+
+// ── SORT ──────────────────────────────────────────────────────────────────
+const sortCycle = ['id','az','za','cat'];
+const sortNames = {id:'ID',az:'A→Z',za:'Z→A',cat:'Cat'};
+function cycleSort() {
+  sortMode = sortCycle[(sortCycle.indexOf(sortMode)+1) % sortCycle.length];
+  document.getElementById('sort-label').textContent = sortNames[sortMode];
+  renderEntries();
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('s-total').textContent  = db.length;
+  document.getElementById('s-shown').textContent  = getFiltered().length;
+  document.getElementById('s-added').textContent  = addedCount;
+  document.getElementById('s-edited').textContent = editedCount;
+  document.getElementById('db-count').textContent = `${db.length} entries`;
+}
+
+// ── ADD MODAL ─────────────────────────────────────────────────────────────
+function openAddModal() {
+  selectedTranslation = null;
+  document.getElementById('modal-title').textContent = 'Add New Entry';
+  document.getElementById('modal-save-label').textContent = 'Add to Database';
+  document.getElementById('t-en').value = '';
+  document.getElementById('t-cat').value = 'social';
+  document.getElementById('t-newcat').value = '';
+  document.getElementById('m-fr').value = '';
+  document.getElementById('m-en').value = '';
+  document.getElementById('m-ctx').value = '';
+  document.getElementById('m-cat').value = 'social';
+  document.getElementById('m-newcat').value = '';
+  document.getElementById('translation-results').style.display = 'none';
+  document.getElementById('selected-editor').style.display = 'none';
+  document.getElementById('trans-status').textContent = '';
+  document.getElementById('btn-web').disabled = true;
+  document.getElementById('btn-claude').disabled = true;
+  switchTab('translate');
+  document.getElementById('add-modal').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-translate').classList.toggle('active', tab==='translate');
+  document.getElementById('tab-manual').classList.toggle('active', tab==='manual');
+  document.getElementById('pane-translate').style.display = tab==='translate' ? '' : 'none';
+  document.getElementById('pane-manual').style.display    = tab==='manual'    ? '' : 'none';
+}
+
+function onEnInput() {
+  const v = document.getElementById('t-en').value.trim();
+  document.getElementById('btn-web').disabled = !v;
+  document.getElementById('btn-claude').disabled = !v;
+  document.getElementById('translation-results').style.display = 'none';
+  document.getElementById('selected-editor').style.display = 'none';
+  selectedTranslation = null;
+}
+
+// ── WORKER URL ───────────────────────────────────────────────────────────
+// Deploy cloudflare-worker.js once, then paste the URL here.
+// Works from any device — no per-device setup needed.
+const WORKER_URL = ''; // e.g. 'https://gdp-proxy.yourname.workers.dev'
+
+function initWorkerDisplay() {
+  const disp = document.getElementById('worker-url-display');
+  const stat = document.getElementById('worker-status');
+  if (!disp || !stat) return;
+  if (!WORKER_URL) {
+    disp.textContent = 'Claude disabled — set WORKER_URL in the JS';
+    disp.style.color = '#b04060';
+    stat.textContent = '⚠'; stat.style.color = '#b04060';
+  } else {
+    disp.textContent = WORKER_URL;
+    disp.style.color = '#186030';
+    stat.textContent = '✓'; stat.style.color = '#186030';
+  }
+}
+
+// ── CLAUDE TRANSLATE ──────────────────────────────────────────────────────
+async function translateClaude() {
+  const en = document.getElementById('t-en').value.trim();
+  if (!en) return;
+  if (!WORKER_URL) {
+    setStatus('<span style="color:#b04060">Set WORKER_URL in the JS first (see cloudflare-worker.js)</span>');
+    return;
+  }
+  const cat = document.getElementById('t-newcat').value.trim() || document.getElementById('t-cat').value;
+  setStatus('<span class="spinner"></span> Asking Claude…');
+  document.getElementById('btn-claude').disabled = true;
+  document.getElementById('btn-web').disabled = true;
+  try {
+    const prompt = `You are an expert French travel phrasebook translator for "Guide de Poche", a France travel companion app.
+
+Translate this English phrase into French: "${en}"
+Category: ${cat}
+
+Return ONLY valid JSON, no markdown fences, no extra text:
+{"translations":[{"fr":"<best French translation>","ctx":"<1-2 sentence practical tip: when/how to use it, cultural nuance, traveler context>","notes":"<formal/informal variation or pronunciation tip if useful>"},{"fr":"<alternative phrasing if meaningfully different, else omit>","ctx":"<different situation where this variant fits>","notes":""}]}
+
+Keep ctx practical and specific to France. Avoid generic advice.`;
+
+    const resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!resp.ok) {
+      const errBody = await resp.json().catch(() => null);
+      const msg = errBody?.error?.message || `HTTP ${resp.status}`;
+      if (resp.status === 401) throw new Error('Invalid API key in Worker — check env variable');
+      throw new Error(msg);
+    }
+    const data = await resp.json();
+    const raw = data.content.map(b => b.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let parsed;
+    try { parsed = JSON.parse(clean); }
+    catch {
+      const m = clean.match(/\{[\s\S]+\}/);
+      if (m) parsed = JSON.parse(m[0]); else throw new Error('Could not parse response');
+    }
+    const results = parsed.translations.filter(t => t.fr && t.fr.trim());
+    renderCards(results, 'claude');
+    setStatus('');
+  } catch(err) {
+    const hint = (err.message||'').toLowerCase().includes('fetch') ? ' — check Worker URL' : '';
+    setStatus(`<span style="color:#b04060">${esc(err.message)}${hint}</span>`);
+  } finally {
+    document.getElementById('btn-claude').disabled = false;
+    document.getElementById('btn-web').disabled = false;
+  }
+}
+
+// ── WEB TRANSLATE ─────────────────────────────────────────────────────────
+async function translateWeb() {
+  const en = document.getElementById('t-en').value.trim();
+  if (!en) return;
+  setStatus('<span class="spinner"></span> Fetching…');
+  document.getElementById('btn-web').disabled = true;
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(en)}&langpair=en|fr`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.responseStatus !== 200) throw new Error('Service unavailable');
+    const primary = data.responseData.translatedText;
+    const results = [{ fr: primary, ctx: 'Web translation — add context manually.', notes: 'Review for accuracy' }];
+    if (data.matches?.length > 1) {
+      const alt = data.matches.find(m => m.translation !== primary && (m.quality||0) >= 70);
+      if (alt) results.push({ fr: alt.translation, ctx: `Alternative (quality: ${alt.quality}).`, notes: '' });
+    }
+    renderCards(results, 'web');
+    setStatus('');
+  } catch(err) {
+    setStatus(`<span style="color:#b04060">Error: ${esc(err.message)}</span>`);
+  } finally {
+    document.getElementById('btn-web').disabled = false;
+  }
+}
+
+function renderCards(translations, source) {
+  const container = document.getElementById('results-cards');
+  container.innerHTML = translations.map((t,i) => `
+    <div class="translation-card" id="tc-${i}" onclick="selectCard(${i},'${source}',${JSON.stringify(t).replace(/"/g,'&quot;')})">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span class="card-header" style="font-size:13px;font-weight:500;color:#1a1a22">Option ${i+1}</span>
+        <span class="source-badge src-${source}">${source==='claude'?'Claude AI':'Web'}</span>
+      </div>
+      <div style="font-size:13px;color:#222240;font-weight:500;margin-bottom:5px">${esc(t.fr)}</div>
+      <div style="font-size:11px;color:#666678;line-height:1.5">${esc(t.ctx)}</div>
+      ${t.notes?`<div style="font-size:10px;color:#999ab0;margin-top:4px;font-style:italic">${esc(t.notes)}</div>`:''}
+    </div>`).join('');
+  document.getElementById('translation-results').style.display = '';
+  document.getElementById('selected-editor').style.display = 'none';
+  selectedTranslation = null;
+}
+
+function selectCard(idx, source, t) {
+  document.querySelectorAll('.translation-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById(`tc-${idx}`).classList.add('selected');
+  selectedTranslation = { fr: t.fr, ctx: t.ctx };
+  document.getElementById('sel-fr').value  = t.fr;
+  document.getElementById('sel-ctx').value = t.ctx;
+  document.getElementById('selected-editor').style.display = '';
+}
+
+function setStatus(html) { document.getElementById('trans-status').innerHTML = html; }
+
+// ── SAVE ENTRY ────────────────────────────────────────────────────────────
+function saveEntry() {
+  const newCat = v => v.trim();
+  if (currentTab === 'translate') {
+    const en = document.getElementById('t-en').value.trim();
+    if (!en) { showToast('Enter an English phrase first', 'err'); return; }
+    if (!selectedTranslation) { showToast('Get and select a translation first', 'err'); return; }
+    const fr  = document.getElementById('sel-fr').value.trim();
+    const ctx = document.getElementById('sel-ctx').value.trim();
+    if (!fr)  { showToast('French translation is empty', 'err'); return; }
+    const cat = newCat(document.getElementById('t-newcat').value) || document.getElementById('t-cat').value;
+    db.push({ id: nextId(), category: cat, fr, en, ctx });
+    addedCount++;
+  } else {
+    const fr  = document.getElementById('m-fr').value.trim();
+    const en  = document.getElementById('m-en').value.trim();
+    const ctx = document.getElementById('m-ctx').value.trim();
+    if (!fr || !en) { showToast('French and English are required', 'err'); return; }
+    const cat = newCat(document.getElementById('m-newcat').value) || document.getElementById('m-cat').value;
+    db.push({ id: nextId(), category: cat, fr, en, ctx });
+    addedCount++;
+  }
+  closeModal();
+  renderCatSidebar(); renderCatPills(); renderEntries();
+  showToast('Entry added', 'ok');
+  // Advance inbox queue if active
+  if (inboxQueue.length > 0 && inboxQueueIdx < inboxQueue.length) {
+    inboxQueueIdx++;
+    if (inboxQueueIdx < inboxQueue.length) setTimeout(openNextInboxItem, 300);
+    else { inboxQueue=[]; inboxQueueIdx=0; showToast(`All inbox items added to DB!`, 'ok'); }
+  }
+}
+
+function nextId() { return Math.max(0, ...db.map(e=>e.id)) + 1; }
+
+// ── DELETE ────────────────────────────────────────────────────────────────
+function openDeleteModal(id) {
+  pendingDeleteId = id;
+  const e = db.find(x=>x.id===id);
+  document.getElementById('del-phrase').textContent = e ? `"${e.fr}" — ${e.en}` : '';
+  document.getElementById('del-modal').classList.add('open');
+  lucide.createIcons();
+}
+function closeDelModal() { document.getElementById('del-modal').classList.remove('open'); }
+function confirmDelete() {
+  db = db.filter(e=>e.id!==pendingDeleteId);
+  if (editingRowId===pendingDeleteId) editingRowId=null;
+  closeDelModal();
+  renderCatSidebar(); renderCatPills(); renderEntries();
+  showToast('Entry deleted');
+}
+
+// ── LOAD / EXPORT ─────────────────────────────────────────────────────────
+function exportDB() {
+  const json = JSON.stringify(db, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data.json'; a.click();
+  showToast(`Exported ${db.length} entries → data.json (replaces existing file)`, 'ok');
+}
+
+function loadDB(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!Array.isArray(parsed)) throw new Error('Expected a JSON array');
+      if (!parsed[0] || !('fr' in parsed[0] && 'en' in parsed[0])) throw new Error('Missing fr/en fields');
+      db = parsed; addedCount=0; editedCount=0; editingRowId=null;
+      renderCatSidebar(); renderCatPills(); renderEntries();
+      showToast(`Loaded ${db.length} entries from ${file.name}`, 'ok');
+    } catch(err) { showToast(`Load failed: ${err.message}`, 'err'); }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function importInbox(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!Array.isArray(parsed)) throw new Error('Expected a JSON array');
+      // inbox items have {fr, en, ts} — pre-fill add modal for each
+      if (!parsed.length) { showToast('Inbox is empty', 'err'); return; }
+      // Open the first item in the manual add modal; user can cycle through
+      inboxQueue = parsed.map(x => ({ fr: x.fr || '', en: x.en || '', ctx: '' }));
+      inboxQueueIdx = 0;
+      openNextInboxItem();
+      showToast(`${parsed.length} inbox item${parsed.length===1?'':'s'} ready — review and save each`, 'ok');
+    } catch(err) { showToast(`Import failed: ${err.message}`, 'err'); }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+let inboxQueue = [];
+let inboxQueueIdx = 0;
+
+function openNextInboxItem() {
+  if (inboxQueueIdx >= inboxQueue.length) {
+    showToast('All inbox items reviewed!', 'ok'); return;
+  }
+  const item = inboxQueue[inboxQueueIdx];
+  editingId = null; selectedTranslation = null;
+  const remaining = inboxQueue.length - inboxQueueIdx;
+  document.getElementById('modal-title').textContent = `Review Inbox Item (${inboxQueueIdx+1} of ${inboxQueue.length})`;
+  document.getElementById('modal-subtitle').textContent = `${remaining} remaining — add context and save`;
+  document.getElementById('modal-save-label').textContent = 'Add to Database';
+  document.getElementById('m-fr').value  = item.fr;
+  document.getElementById('m-en').value  = item.en;
+  document.getElementById('m-ctx').value = '';
+  document.getElementById('m-cat').value = 'social';
+  document.getElementById('m-newcat').value = '';
+  document.getElementById('btn-web').disabled = true;
+  document.getElementById('btn-claude').disabled = true;
+  document.getElementById('translation-results').style.display = 'none';
+  document.getElementById('selected-editor').style.display = 'none';
+  document.getElementById('trans-status').textContent = '';
+  switchTab('manual');
+  document.getElementById('add-modal').classList.add('open');
+  lucide.createIcons();
+  // Focus context field so user can immediately add a tip
+  setTimeout(() => document.getElementById('m-ctx').focus(), 60);
+}
+
+// ── QUICK EN→FR LOOKUP ────────────────────────────────────────────────────
+function qTranslateDebounce() { clearTimeout(qtTimer); qtTimer = setTimeout(doQTranslate, 600); }
+let lastLookup = null;
+async function doQTranslate() {
+  const en = document.getElementById('quick-en').value.trim();
+  const el = document.getElementById('quick-result');
+  const addRow = document.getElementById('quick-add-row');
+  if (!en) { el.textContent=''; addRow.style.display='none'; lastLookup=null; return; }
+  el.innerHTML = '<span class="spinner"></span>';
+  addRow.style.display = 'none';
+  lastLookup = null;
+  try {
+    const resp = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(en)}&langpair=en|fr`);
+    const data = await resp.json();
+    if (data.responseStatus===200) {
+      const fr = data.responseData.translatedText;
+      lastLookup = { en, fr };
+      el.innerHTML = `<span style="color:#2060c0;font-weight:500;font-size:13px">${esc(fr)}</span>`;
+      addRow.style.display = '';
+      lucide.createIcons();
+    } else { el.textContent = 'No result'; }
+  } catch { el.textContent = 'Error'; }
+}
+
+function addFromLookup() {
+  if (!lastLookup) return;
+  // pre-fill manual tab and open modal
+  openAddModal();
+  switchTab('manual');
+  document.getElementById('m-en').value = lastLookup.en;
+  document.getElementById('m-fr').value = lastLookup.fr;
+  document.getElementById('m-ctx').focus();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type='') {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast show${type?' '+type:''}`;
+  toastTimer = setTimeout(()=>{ t.className='toast'; }, 2500);
+}
+
+window.onload = gateInit;
+
+function restoreApiKey() {
+  initWorkerDisplay();
+}
+</script>
+</body>
+</html>
