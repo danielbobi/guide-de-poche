@@ -880,5 +880,12 @@
     "fr": "Il est très beau",
     "en": "It is very beautiful here",
     "ctx": "describing a place you think is pretty"
+  },
+  {
+    "id": 127,
+    "category": "social",
+    "fr": "Si pas maintenant, quand?",
+    "en": "If not now, when?",
+    "ctx": "Use this philosophical phrase when encouraging friends to seize a spontaneous opportunity—common in casual French conversations about travel plans, trying new restaurants, or taking that day trip. Works well in social settings where you're motivating group decisions."
   }
 ]
