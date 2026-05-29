@@ -7,6 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Guide de Poche">
   <meta name="theme-color" content="#1a2744">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
   <title>Guide de Poche</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -161,6 +162,16 @@
     .tr-btn-save  { background: rgba(212,160,23,0.30); color: #ffd070; }
     .tr-btn-save:hover  { background: rgba(212,160,23,0.50); }
     .tr-btn-save.saved  { background: rgba(212,160,23,0.50); color: #ffe090; }
+    .tr-cat-select {
+      width: 100%; margin-top: 8px;
+      appearance: none; -webkit-appearance: none;
+      background: rgba(255,255,255,0.10) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E") no-repeat right 10px center;
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 8px;
+      color: rgba(255,255,255,0.8); font-size: 12px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif; padding: 7px 28px 7px 10px;
+      cursor: pointer; outline: none;
+    }
+    .tr-cat-select option { background: #1a2744; color: #fff; }
 
     /* ── MAIN ── */
     main { max-width: 480px; margin: 0 auto; padding: 14px 14px 100px; display: flex; flex-direction: column; gap: 10px; }
@@ -213,7 +224,9 @@
     .cc-transit    { background:#fafae8;color:#505010; }
     .cc-emergency  { background:#fff0f0;color:#800010; }
     .cc-culture    { background:#f0f0ff;color:#202080; }
-    .cc-events     { background:#fff0f5;color:#800030; }
+    .cc-events         { background:#fff0f5;color:#800030; }
+    .cc-accommodation  { background:#e8f4ff;color:#004080; }
+    .cc-problems       { background:#fff4e8;color:#7a3000; }
 
     /* ── INBOX SHEET ── */
     .inbox-item {
@@ -321,6 +334,20 @@
   <div class="tr-result" id="tr-result">
     <div class="tr-fr" id="tr-fr"></div>
     <div class="tr-en" id="tr-en"></div>
+    <select class="tr-cat-select" id="tr-cat-select">
+      <option value="social">Social</option>
+      <option value="dining">Dining</option>
+      <option value="shopping">Shopping</option>
+      <option value="salon">Salon</option>
+      <option value="driving">Driving</option>
+      <option value="directions">Directions</option>
+      <option value="transit">Transit</option>
+      <option value="emergency">Emergency</option>
+      <option value="culture">Culture</option>
+      <option value="events">Events</option>
+      <option value="accommodation">Accommodation</option>
+      <option value="problems">Problems</option>
+    </select>
     <div class="tr-actions">
       <button class="tr-btn tr-btn-speak" onclick="speakResult()">▶ Speak</button>
       <button class="tr-btn tr-btn-save" id="tr-save-btn" onclick="saveToInbox()">📥 Save for later</button>
@@ -604,6 +631,7 @@ async function doTranslate() {
 function showResult(fr, en) {
   document.getElementById('tr-fr').textContent = fr;
   document.getElementById('tr-en').textContent = en;
+  document.getElementById('tr-cat-select').value = 'social'; // reset each time
   document.getElementById('tr-save-btn').textContent = '📥 Save for later';
   document.getElementById('tr-save-btn').classList.remove('saved');
   document.getElementById('tr-result').classList.add('show');
@@ -618,10 +646,11 @@ function speakResult() {
 // ── INBOX ─────────────────────────────────────────────────────────────────
 function saveToInbox() {
   if (!currentResult) return;
+  const cat = document.getElementById('tr-cat-select').value || 'social';
   // avoid duplicates
   const exists = inbox.some(x => x.fr === currentResult.fr);
   if (!exists) {
-    inbox.unshift({ fr: currentResult.fr, en: currentResult.en, ts: Date.now() });
+    inbox.unshift({ fr: currentResult.fr, en: currentResult.en, cat, ts: Date.now() });
     localStorage.setItem('gdp_inbox', JSON.stringify(inbox));
   }
   updateInboxBadge();

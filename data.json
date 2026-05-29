@@ -884,8 +884,925 @@
   {
     "id": 127,
     "category": "social",
-    "fr": "Si pas maintenant, quand?",
-    "en": "If not now, when?",
-    "ctx": "Use this philosophical phrase when encouraging friends to seize a spontaneous opportunity—common in casual French conversations about travel plans, trying new restaurants, or taking that day trip. Works well in social settings where you're motivating group decisions."
+    "fr": "Salut",
+    "en": "Hi (casual)",
+    "ctx": "Use with friends or young people only. Never use with shopkeepers or strangers."
+  },
+  {
+    "id": 128,
+    "category": "social",
+    "fr": "Au revoir",
+    "en": "Goodbye",
+    "ctx": "Standard polite farewell — always say this when leaving a shop."
+  },
+  {
+    "id": 129,
+    "category": "social",
+    "fr": "À bientôt",
+    "en": "See you soon",
+    "ctx": "Friendly farewell when you expect to see someone again."
+  },
+  {
+    "id": 130,
+    "category": "social",
+    "fr": "Bonne nuit",
+    "en": "Good night",
+    "ctx": "Said at the end of the evening when parting for the night."
+  },
+  {
+    "id": 131,
+    "category": "social",
+    "fr": "Bonne journée",
+    "en": "Have a good day",
+    "ctx": "Said when leaving a shop or ending a daytime interaction — very appreciated."
+  },
+  {
+    "id": 132,
+    "category": "social",
+    "fr": "D'accord",
+    "en": "Okay / Agreed",
+    "ctx": "Universal agreement phrase. Far more common than 'oui' in conversation."
+  },
+  {
+    "id": 133,
+    "category": "social",
+    "fr": "Je m'appelle...",
+    "en": "My name is...",
+    "ctx": "How to introduce yourself."
+  },
+  {
+    "id": 134,
+    "category": "social",
+    "fr": "Comment allez-vous ?",
+    "en": "How are you?",
+    "ctx": "Formal. Use with strangers and shopkeepers. 'Ça va ?' is casual."
+  },
+  {
+    "id": 135,
+    "category": "social",
+    "fr": "Je vais bien, merci",
+    "en": "I'm fine, thank you",
+    "ctx": "Standard polite response to 'Comment allez-vous ?'"
+  },
+  {
+    "id": 136,
+    "category": "social",
+    "fr": "Bien sûr",
+    "en": "Of course",
+    "ctx": "Warm affirmation — more enthusiastic than 'oui'."
+  },
+  {
+    "id": 137,
+    "category": "social",
+    "fr": "Pas de problème",
+    "en": "No problem",
+    "ctx": "Reassuring phrase — use when someone thanks you or apologizes."
+  },
+  {
+    "id": 138,
+    "category": "social",
+    "fr": "Je ne comprends pas",
+    "en": "I don't understand",
+    "ctx": "Essential — say this clearly and slowly so the person knows to rephrase."
+  },
+  {
+    "id": 139,
+    "category": "social",
+    "fr": "Pouvez-vous répéter ?",
+    "en": "Can you repeat that?",
+    "ctx": "Ask politely when you missed something. Add 'plus lentement' for more slowly."
+  },
+  {
+    "id": 140,
+    "category": "social",
+    "fr": "Plus lentement, s'il vous plaît",
+    "en": "More slowly, please",
+    "ctx": "Essential when someone speaks too fast. Most French people will oblige."
+  },
+  {
+    "id": 141,
+    "category": "social",
+    "fr": "Je parle un peu français",
+    "en": "I speak a little French",
+    "ctx": "Sets expectations and often earns goodwill from locals."
+  },
+  {
+    "id": 142,
+    "category": "social",
+    "fr": "Je suis en vacances",
+    "en": "I'm here on vacation",
+    "ctx": "Useful small talk opener — French people respond warmly to tourists making an effort."
+  },
+  {
+    "id": 143,
+    "category": "social",
+    "fr": "J'adore cette ville",
+    "en": "I love this city",
+    "ctx": "A genuine compliment that locals appreciate hearing."
+  },
+  {
+    "id": 144,
+    "category": "social",
+    "fr": "Santé !",
+    "en": "Cheers!",
+    "ctx": "Always say this when clinking glasses — it's considered rude not to make eye contact."
+  },
+  {
+    "id": 145,
+    "category": "social",
+    "fr": "Bon appétit",
+    "en": "Enjoy your meal",
+    "ctx": "Said before eating — always expected from the host or server."
+  },
+  {
+    "id": 146,
+    "category": "social",
+    "fr": "Bonne soirée",
+    "en": "Have a good evening",
+    "ctx": "Evening farewell — use after 6pm when leaving a shop or restaurant."
+  },
+  {
+    "id": 147,
+    "category": "social",
+    "fr": "Pouvez-vous l'écrire ?",
+    "en": "Can you write it down?",
+    "ctx": "Ask this for addresses, names, or anything you need to remember precisely."
+  },
+  {
+    "id": 148,
+    "category": "social",
+    "fr": "Y a-t-il quelqu'un qui parle anglais ?",
+    "en": "Is there someone who speaks English?",
+    "ctx": "Useful in shops or hotels if the person you're speaking with can't help."
+  },
+  {
+    "id": 149,
+    "category": "directions",
+    "fr": "Je suis perdu(e)",
+    "en": "I'm lost",
+    "ctx": "Say this to any passerby — French people are generally helpful to lost tourists."
+  },
+  {
+    "id": 150,
+    "category": "directions",
+    "fr": "Où est la gare ?",
+    "en": "Where is the train station?",
+    "ctx": "Essential navigation phrase for any city."
+  },
+  {
+    "id": 151,
+    "category": "directions",
+    "fr": "Comment aller à... ?",
+    "en": "How do I get to...?",
+    "ctx": "Open-ended direction request — follow with your destination."
+  },
+  {
+    "id": 152,
+    "category": "directions",
+    "fr": "C'est là-bas",
+    "en": "It's over there",
+    "ctx": "What locals will say pointing you in the right direction."
+  },
+  {
+    "id": 153,
+    "category": "directions",
+    "fr": "C'est sur votre gauche",
+    "en": "It's on your left",
+    "ctx": "Directional response you'll hear frequently."
+  },
+  {
+    "id": 154,
+    "category": "directions",
+    "fr": "C'est au coin de la rue",
+    "en": "It's around the corner",
+    "ctx": "Very common response when asking for nearby locations."
+  },
+  {
+    "id": 155,
+    "category": "directions",
+    "fr": "Pouvez-vous me montrer sur la carte ?",
+    "en": "Can you show me on the map?",
+    "ctx": "Show your phone map and ask locals to point — bypasses language barriers entirely."
+  },
+  {
+    "id": 156,
+    "category": "directions",
+    "fr": "Par où pour le centre-ville ?",
+    "en": "Which way to the city center?",
+    "ctx": "Useful in any French town — the centre-ville is always the main hub."
+  },
+  {
+    "id": 157,
+    "category": "directions",
+    "fr": "En face de",
+    "en": "Across from / Opposite",
+    "ctx": "Common landmark reference in directions."
+  },
+  {
+    "id": 158,
+    "category": "directions",
+    "fr": "Derrière",
+    "en": "Behind",
+    "ctx": "Directional preposition you'll hear when getting directions."
+  },
+  {
+    "id": 159,
+    "category": "transit",
+    "fr": "Un aller-retour",
+    "en": "A round-trip ticket",
+    "ctx": "Ask for this at the guichet for train travel."
+  },
+  {
+    "id": 160,
+    "category": "transit",
+    "fr": "Un aller simple",
+    "en": "A one-way ticket",
+    "ctx": "Specify this if you only need to go one way."
+  },
+  {
+    "id": 161,
+    "category": "transit",
+    "fr": "Quel quai ?",
+    "en": "Which platform?",
+    "ctx": "Ask at the station — platforms (quais) can change last minute."
+  },
+  {
+    "id": 162,
+    "category": "transit",
+    "fr": "Cette place est prise ?",
+    "en": "Is this seat taken?",
+    "ctx": "Always ask before sitting in an unreserved seat on a train."
+  },
+  {
+    "id": 163,
+    "category": "transit",
+    "fr": "Ce train va à... ?",
+    "en": "Does this train go to...?",
+    "ctx": "Verify before boarding — French trains have multiple splits at junctions."
+  },
+  {
+    "id": 164,
+    "category": "transit",
+    "fr": "Quand part le prochain train ?",
+    "en": "When is the next train?",
+    "ctx": "Ask at the guichet or check the departure board (tableau des départs)."
+  },
+  {
+    "id": 165,
+    "category": "transit",
+    "fr": "C'est le bon arrêt ?",
+    "en": "Is this the right stop?",
+    "ctx": "Ask a fellow passenger when unsure — especially on buses."
+  },
+  {
+    "id": 166,
+    "category": "transit",
+    "fr": "Le train est en retard",
+    "en": "The train is late",
+    "ctx": "What you'll hear on the PA — retard means delay."
+  },
+  {
+    "id": 167,
+    "category": "transit",
+    "fr": "J'ai raté mon train",
+    "en": "I missed my train",
+    "ctx": "Say this at the guichet — staff can often rebook at no extra charge."
+  },
+  {
+    "id": 168,
+    "category": "transit",
+    "fr": "Où est le guichet ?",
+    "en": "Where is the ticket office?",
+    "ctx": "For buying or changing tickets in person at a station."
+  },
+  {
+    "id": 169,
+    "category": "transit",
+    "fr": "Dites-moi quand descendre, s'il vous plaît",
+    "en": "Please tell me when to get off",
+    "ctx": "Ask the driver or a fellow passenger on an unfamiliar bus route."
+  },
+  {
+    "id": 170,
+    "category": "transit",
+    "fr": "J'ai besoin d'un taxi",
+    "en": "I need a taxi",
+    "ctx": "Ask at your hotel reception — they can call one or point to the nearest rank."
+  },
+  {
+    "id": 171,
+    "category": "transit",
+    "fr": "Conduisez-moi à cette adresse, s'il vous plaît",
+    "en": "Take me to this address, please",
+    "ctx": "Show your phone screen with the address — eliminates pronunciation issues."
+  },
+  {
+    "id": 172,
+    "category": "transit",
+    "fr": "À l'aéroport, s'il vous plaît",
+    "en": "To the airport, please",
+    "ctx": "Always confirm which airport (Charles de Gaulle or Orly) in Paris."
+  },
+  {
+    "id": 173,
+    "category": "transit",
+    "fr": "Mettez le compteur, s'il vous plaît",
+    "en": "Please use the meter",
+    "ctx": "Always ask this — prevents overcharging on unofficial fares."
+  },
+  {
+    "id": 174,
+    "category": "transit",
+    "fr": "Arrêtez-vous ici, s'il vous plaît",
+    "en": "Stop here, please",
+    "ctx": "Use when you want to be dropped before the destination."
+  },
+  {
+    "id": 175,
+    "category": "transit",
+    "fr": "Gardez la monnaie",
+    "en": "Keep the change",
+    "ctx": "Tipping taxi drivers is appreciated though not obligatory in France."
+  },
+  {
+    "id": 176,
+    "category": "transit",
+    "fr": "Ralentissez, s'il vous plaît",
+    "en": "Slow down, please",
+    "ctx": "Don't hesitate to ask — French drivers can be assertive."
+  },
+  {
+    "id": 177,
+    "category": "transit",
+    "fr": "C'est un prix fixe ?",
+    "en": "Is it a fixed price?",
+    "ctx": "Airports have fixed fares — always confirm before getting in."
+  },
+  {
+    "id": 178,
+    "category": "transit",
+    "fr": "Voici mon passeport",
+    "en": "Here is my passport",
+    "ctx": "Have it open and ready at check-in and passport control."
+  },
+  {
+    "id": 179,
+    "category": "transit",
+    "fr": "Où est l'enregistrement ?",
+    "en": "Where is the check-in counter?",
+    "ctx": "Airports use this word for check-in — different from hotel check-in."
+  },
+  {
+    "id": 180,
+    "category": "transit",
+    "fr": "Le vol est à l'heure ?",
+    "en": "Is the flight on time?",
+    "ctx": "Ask at the gate or check the departures board."
+  },
+  {
+    "id": 181,
+    "category": "transit",
+    "fr": "Mon vol est retardé",
+    "en": "My flight is delayed",
+    "ctx": "Use when contacting your hotel or ground transport to warn of late arrival."
+  },
+  {
+    "id": 182,
+    "category": "transit",
+    "fr": "Je ne trouve pas mes bagages",
+    "en": "I can't find my luggage",
+    "ctx": "Say this at the baggage claim desk — they'll file a lost luggage report."
+  },
+  {
+    "id": 183,
+    "category": "transit",
+    "fr": "Je n'ai rien à déclarer",
+    "en": "I have nothing to declare",
+    "ctx": "State this at customs — say it clearly and confidently."
+  },
+  {
+    "id": 184,
+    "category": "transit",
+    "fr": "Y a-t-il une navette pour la ville ?",
+    "en": "Is there a shuttle to the city?",
+    "ctx": "Many French airports have shuttle buses cheaper than taxis."
+  },
+  {
+    "id": 185,
+    "category": "transit",
+    "fr": "Y a-t-il du Wi-Fi gratuit ?",
+    "en": "Is there free Wi-Fi?",
+    "ctx": "Ask at airports, hotels, and cafés — French establishments increasingly offer it."
+  },
+  {
+    "id": 186,
+    "category": "accommodation",
+    "fr": "J'ai une réservation",
+    "en": "I have a reservation",
+    "ctx": "State this on arrival — have your booking confirmation ready on your phone."
+  },
+  {
+    "id": 187,
+    "category": "accommodation",
+    "fr": "Avez-vous une chambre libre ?",
+    "en": "Do you have a room available?",
+    "ctx": "For walk-in bookings without a reservation."
+  },
+  {
+    "id": 188,
+    "category": "accommodation",
+    "fr": "Une chambre pour deux personnes",
+    "en": "A room for two people",
+    "ctx": "Specify this — some double rooms in France have twin beds by default."
+  },
+  {
+    "id": 189,
+    "category": "accommodation",
+    "fr": "Combien par nuit ?",
+    "en": "How much per night?",
+    "ctx": "Always ask before committing to a room at a smaller hotel."
+  },
+  {
+    "id": 190,
+    "category": "accommodation",
+    "fr": "Le petit-déjeuner est compris ?",
+    "en": "Is breakfast included?",
+    "ctx": "French hotel breakfasts can be expensive — worth knowing if it's included."
+  },
+  {
+    "id": 191,
+    "category": "accommodation",
+    "fr": "À quelle heure faut-il libérer la chambre ?",
+    "en": "What time is check-out?",
+    "ctx": "Standard check-out in France is noon — ask if you need a late check-out."
+  },
+  {
+    "id": 192,
+    "category": "accommodation",
+    "fr": "Puis-je voir la chambre ?",
+    "en": "Can I see the room?",
+    "ctx": "Always acceptable to ask at smaller hotels before committing."
+  },
+  {
+    "id": 193,
+    "category": "accommodation",
+    "fr": "La climatisation ne marche pas",
+    "en": "The air conditioning isn't working",
+    "ctx": "Report this to reception — essential in summer."
+  },
+  {
+    "id": 194,
+    "category": "accommodation",
+    "fr": "Puis-je avoir la clé ?",
+    "en": "Can I have the key?",
+    "ctx": "Many French hotels still use physical keys or key cards."
+  },
+  {
+    "id": 195,
+    "category": "accommodation",
+    "fr": "Où est l'ascenseur ?",
+    "en": "Where is the elevator?",
+    "ctx": "Many French buildings have very small elevators — ask if you have heavy luggage."
+  },
+  {
+    "id": 196,
+    "category": "accommodation",
+    "fr": "Puis-je laisser mes bagages ici ?",
+    "en": "Can I leave my bags here?",
+    "ctx": "Most hotels will store bags before check-in or after check-out."
+  },
+  {
+    "id": 197,
+    "category": "accommodation",
+    "fr": "Je voudrais régler la note",
+    "en": "I'd like to check out",
+    "ctx": "The formal way to request your bill and check out at a hotel."
+  },
+  {
+    "id": 198,
+    "category": "accommodation",
+    "fr": "Y a-t-il un coffre-fort dans la chambre ?",
+    "en": "Is there a safe in the room?",
+    "ctx": "Worth asking when carrying valuables or a lot of cash."
+  },
+  {
+    "id": 199,
+    "category": "accommodation",
+    "fr": "Puis-je avoir plus de serviettes ?",
+    "en": "Can I have more towels?",
+    "ctx": "French hotels often provide just one towel per person — ask for more."
+  },
+  {
+    "id": 200,
+    "category": "accommodation",
+    "fr": "Le mot de passe Wi-Fi, s'il vous plaît",
+    "en": "The Wi-Fi password, please",
+    "ctx": "Ask at check-in — French hotels don't always display it prominently."
+  },
+  {
+    "id": 201,
+    "category": "dining",
+    "fr": "Une table pour deux, s'il vous plaît",
+    "en": "A table for two, please",
+    "ctx": "Say this on arrival — French restaurants seat you, not open seating."
+  },
+  {
+    "id": 202,
+    "category": "dining",
+    "fr": "La carte, s'il vous plaît",
+    "en": "The menu, please",
+    "ctx": "'La carte' is the à la carte menu. 'Le menu' is the fixed price set menu — know the difference."
+  },
+  {
+    "id": 203,
+    "category": "dining",
+    "fr": "Que recommandez-vous ?",
+    "en": "What do you recommend?",
+    "ctx": "Ask your server — they know the best dishes and specials of the day."
+  },
+  {
+    "id": 204,
+    "category": "dining",
+    "fr": "Je vais prendre ça",
+    "en": "I'll have this",
+    "ctx": "Point at the menu when ordering — very effective strategy."
+  },
+  {
+    "id": 205,
+    "category": "dining",
+    "fr": "Sans... s'il vous plaît",
+    "en": "Without... please",
+    "ctx": "Use to exclude an ingredient — 'sans oignons' (without onions) etc."
+  },
+  {
+    "id": 206,
+    "category": "dining",
+    "fr": "Une bouteille d'eau",
+    "en": "A bottle of water",
+    "ctx": "Specify 'plate' (still) or 'gazeuse' (sparkling) — sparkling is the default if unspecified."
+  },
+  {
+    "id": 207,
+    "category": "dining",
+    "fr": "Plate ou gazeuse ?",
+    "en": "Still or sparkling?",
+    "ctx": "What the server will ask when you order water. 'Plate' = still, 'gazeuse' = sparkling."
+  },
+  {
+    "id": 208,
+    "category": "dining",
+    "fr": "C'est délicieux",
+    "en": "It's delicious",
+    "ctx": "French chefs and servers genuinely appreciate hearing this — say it freely."
+  },
+  {
+    "id": 209,
+    "category": "dining",
+    "fr": "Peut-on payer séparément ?",
+    "en": "Can we pay separately?",
+    "ctx": "Ask before ordering — some French restaurants refuse separate bills."
+  },
+  {
+    "id": 210,
+    "category": "dining",
+    "fr": "Le service est compris ?",
+    "en": "Is service included?",
+    "ctx": "Service is usually included (15%) in France — check before leaving an extra tip."
+  },
+  {
+    "id": 211,
+    "category": "dining",
+    "fr": "Je n'ai pas commandé ça",
+    "en": "I didn't order this",
+    "ctx": "Polite way to flag an error without making a scene."
+  },
+  {
+    "id": 212,
+    "category": "dining",
+    "fr": "Je voudrais réserver une table",
+    "en": "I'd like to make a reservation",
+    "ctx": "Essential for popular Paris restaurants — call or book online in advance."
+  },
+  {
+    "id": 213,
+    "category": "dining",
+    "fr": "Pourrait-on s'asseoir dehors ?",
+    "en": "Could we sit outside?",
+    "ctx": "Terrace seating is very popular in France — ask on arrival."
+  },
+  {
+    "id": 214,
+    "category": "dining",
+    "fr": "La carte des vins, s'il vous plaît",
+    "en": "The wine list, please",
+    "ctx": "Separate from the food menu in most French restaurants."
+  },
+  {
+    "id": 215,
+    "category": "dining",
+    "fr": "Pouvez-vous réchauffer ça ?",
+    "en": "Could you heat this up?",
+    "ctx": "Useful if a dish arrives lukewarm — a polite way to send it back briefly."
+  },
+  {
+    "id": 216,
+    "category": "shopping",
+    "fr": "C'est trop cher",
+    "en": "That's too expensive",
+    "ctx": "Useful at markets where negotiation is possible."
+  },
+  {
+    "id": 217,
+    "category": "shopping",
+    "fr": "Avez-vous une autre taille ?",
+    "en": "Do you have this in another size?",
+    "ctx": "French sizing differs from US — always try before buying."
+  },
+  {
+    "id": 218,
+    "category": "shopping",
+    "fr": "Avez-vous une autre couleur ?",
+    "en": "Do you have this in another color?",
+    "ctx": "Ask to see the full range — items are often kept in the back."
+  },
+  {
+    "id": 219,
+    "category": "shopping",
+    "fr": "Je cherche un cadeau",
+    "en": "I'm looking for a gift",
+    "ctx": "Say this and staff will actively guide you to appropriate items."
+  },
+  {
+    "id": 220,
+    "category": "shopping",
+    "fr": "Où est le supermarché ?",
+    "en": "Where is the supermarket?",
+    "ctx": "For finding groceries — French supermarkets (Monoprix, Carrefour) are excellent."
+  },
+  {
+    "id": 221,
+    "category": "shopping",
+    "fr": "À quelle heure fermez-vous ?",
+    "en": "What time do you close?",
+    "ctx": "French shops often close for lunch 12-2pm and early on Sundays."
+  },
+  {
+    "id": 222,
+    "category": "shopping",
+    "fr": "À quelle heure ouvrez-vous ?",
+    "en": "What time do you open?",
+    "ctx": "Ask before making a special trip — hours vary widely."
+  },
+  {
+    "id": 223,
+    "category": "shopping",
+    "fr": "Pouvez-vous l'emballer ?",
+    "en": "Could you wrap it?",
+    "ctx": "Gift wrapping (emballage cadeau) is a French tradition and usually free."
+  },
+  {
+    "id": 224,
+    "category": "shopping",
+    "fr": "Puis-je avoir une réduction ?",
+    "en": "Can I get a discount?",
+    "ctx": "Appropriate at markets and independent shops — not in chain stores."
+  },
+  {
+    "id": 225,
+    "category": "shopping",
+    "fr": "Combien je vous dois ?",
+    "en": "How much do I owe you?",
+    "ctx": "Direct and polite way to ask the total at markets or informal settings."
+  },
+  {
+    "id": 226,
+    "category": "shopping",
+    "fr": "Où est un distributeur ?",
+    "en": "Where is an ATM?",
+    "ctx": "Distributeur automatique is the French term for ATM cash machine."
+  },
+  {
+    "id": 227,
+    "category": "shopping",
+    "fr": "Avez-vous de la monnaie ?",
+    "en": "Can you break this bill?",
+    "ctx": "French small shops often struggle with large bills — have change when possible."
+  },
+  {
+    "id": 228,
+    "category": "shopping",
+    "fr": "Je crois qu'il y a une erreur",
+    "en": "I think there's a mistake",
+    "ctx": "Polite way to flag a billing error without being accusatory."
+  },
+  {
+    "id": 229,
+    "category": "shopping",
+    "fr": "La carte a été refusée",
+    "en": "The card was declined",
+    "ctx": "What the terminal or cashier will tell you — have a backup card."
+  },
+  {
+    "id": 230,
+    "category": "emergency",
+    "fr": "Au secours !",
+    "en": "Help!",
+    "ctx": "Shout this loudly in a genuine emergency — French people will respond."
+  },
+  {
+    "id": 231,
+    "category": "emergency",
+    "fr": "C'est une urgence",
+    "en": "It's an emergency",
+    "ctx": "Use with any service — police, hotel, restaurant — to convey urgency."
+  },
+  {
+    "id": 232,
+    "category": "emergency",
+    "fr": "Je suis malade",
+    "en": "I'm sick",
+    "ctx": "Basic illness statement — follow with symptoms for better help."
+  },
+  {
+    "id": 233,
+    "category": "emergency",
+    "fr": "J'ai mal",
+    "en": "I'm in pain",
+    "ctx": "Simple and clear — use with pointing to indicate location of pain."
+  },
+  {
+    "id": 234,
+    "category": "emergency",
+    "fr": "J'ai mal ici",
+    "en": "It hurts here",
+    "ctx": "Point to the location as you say this — works across language barriers."
+  },
+  {
+    "id": 235,
+    "category": "emergency",
+    "fr": "J'ai de la fièvre",
+    "en": "I have a fever",
+    "ctx": "Important symptom to communicate at a pharmacy or clinic."
+  },
+  {
+    "id": 236,
+    "category": "emergency",
+    "fr": "Où est l'hôpital ?",
+    "en": "Where is the hospital?",
+    "ctx": "For serious emergencies — call 15 (SAMU) for medical emergencies first."
+  },
+  {
+    "id": 237,
+    "category": "emergency",
+    "fr": "Je suis allergique à la pénicilline",
+    "en": "I'm allergic to penicillin",
+    "ctx": "Critical medical information — keep this phrase memorized or written down."
+  },
+  {
+    "id": 238,
+    "category": "emergency",
+    "fr": "On m'a volé mon sac",
+    "en": "My bag was stolen",
+    "ctx": "Report to police (commissariat) and get a declaration for insurance."
+  },
+  {
+    "id": 239,
+    "category": "emergency",
+    "fr": "J'ai besoin de l'ambassade",
+    "en": "I need the embassy",
+    "ctx": "In serious situations — the US Embassy in Paris is at 2 Avenue Gabriel."
+  },
+  {
+    "id": 240,
+    "category": "emergency",
+    "fr": "Je ne me sens pas bien",
+    "en": "I don't feel well",
+    "ctx": "Gentler way to express illness — useful when symptoms are mild."
+  },
+  {
+    "id": 241,
+    "category": "emergency",
+    "fr": "Y a-t-il un médecin qui parle anglais ?",
+    "en": "Is there a doctor who speaks English?",
+    "ctx": "Ask at your hotel — they usually have a list of English-speaking doctors nearby."
+  },
+  {
+    "id": 242,
+    "category": "emergency",
+    "fr": "Je veux être remboursé(e)",
+    "en": "I want a refund",
+    "ctx": "State this clearly in a shop dispute — French consumer protection law is strong."
+  },
+  {
+    "id": 243,
+    "category": "emergency",
+    "fr": "Laissez-moi tranquille",
+    "en": "Leave me alone",
+    "ctx": "Use firmly if being harassed — French people respect direct assertiveness."
+  },
+  {
+    "id": 244,
+    "category": "culture",
+    "fr": "Y a-t-il une visite guidée ?",
+    "en": "Is there a guided tour?",
+    "ctx": "Many French museums offer excellent guided tours — often free with entry."
+  },
+  {
+    "id": 245,
+    "category": "culture",
+    "fr": "Combien coûte l'entrée ?",
+    "en": "How much is the entrance fee?",
+    "ctx": "Ask before queuing — many French monuments are free on the first Sunday of the month."
+  },
+  {
+    "id": 246,
+    "category": "culture",
+    "fr": "C'est ouvert le dimanche ?",
+    "en": "Is it open on Sundays?",
+    "ctx": "Many French shops and museums have reduced Sunday hours — always check."
+  },
+  {
+    "id": 247,
+    "category": "culture",
+    "fr": "Pouvez-vous nous prendre en photo ?",
+    "en": "Could you take a photo of us?",
+    "ctx": "Ask a fellow visitor — French people are usually happy to help."
+  },
+  {
+    "id": 248,
+    "category": "culture",
+    "fr": "Y a-t-il un tarif étudiant ?",
+    "en": "Is there a student discount?",
+    "ctx": "Worth asking — French cultural venues often offer reduced rates for students and under-26s."
+  },
+  {
+    "id": 249,
+    "category": "culture",
+    "fr": "Ça vaut la peine de visiter ?",
+    "en": "Is it worth visiting?",
+    "ctx": "Ask locals for honest opinions — they'll steer you away from tourist traps."
+  },
+  {
+    "id": 250,
+    "category": "culture",
+    "fr": "Quels sont les horaires ?",
+    "en": "What are the opening hours?",
+    "ctx": "Ask this at the tourist office or check the door — hours change seasonally."
+  },
+  {
+    "id": 251,
+    "category": "culture",
+    "fr": "Je voudrais un plan de la ville",
+    "en": "I'd like a map of the city",
+    "ctx": "Free city maps available at any Office de Tourisme — indispensable for exploring on foot."
+  },
+  {
+    "id": 252,
+    "category": "culture",
+    "fr": "Il fait beau",
+    "en": "The weather is beautiful",
+    "ctx": "A simple compliment to the day — opens friendly conversations with locals."
+  },
+  {
+    "id": 253,
+    "category": "problems",
+    "fr": "Il y a un problème",
+    "en": "There is a problem",
+    "ctx": "Opener for any complaint or issue — calm and neutral."
+  },
+  {
+    "id": 254,
+    "category": "problems",
+    "fr": "Ça ne marche pas",
+    "en": "This doesn't work",
+    "ctx": "Use for broken equipment, appliances, keys, etc."
+  },
+  {
+    "id": 255,
+    "category": "problems",
+    "fr": "J'attends depuis longtemps",
+    "en": "I've been waiting a long time",
+    "ctx": "Polite but effective at restaurants or service counters when ignored."
+  },
+  {
+    "id": 256,
+    "category": "problems",
+    "fr": "Je voudrais parler au responsable",
+    "en": "I'd like to speak to the manager",
+    "ctx": "Use as a last resort — French customer service escalates quickly with this phrase."
+  },
+  {
+    "id": 257,
+    "category": "problems",
+    "fr": "Puis-je être remboursé(e) ?",
+    "en": "Can I get a refund?",
+    "ctx": "Your right under French consumer law within 14 days for most purchases."
+  },
+  {
+    "id": 258,
+    "category": "problems",
+    "fr": "Ce n'est pas acceptable",
+    "en": "This is not acceptable",
+    "ctx": "Firm and direct — use when a situation clearly falls below standard."
   }
 ]
