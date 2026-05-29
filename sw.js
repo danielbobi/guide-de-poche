@@ -1,7 +1,13 @@
 // Guide de Poche — Service Worker
-// Caches the shell + data.json so the app works completely offline.
-const CACHE = 'gdp-v2';
-const SHELL = ['/', '/index.html', '/data.json'];
+const CACHE = 'gdp-v3';
+const SHELL = [
+  '/guide-de-poche/',
+  '/guide-de-poche/index.html',
+  '/guide-de-poche/data.json',
+  '/guide-de-poche/manifest.json',
+  '/guide-de-poche/icon-192.png',
+  '/guide-de-poche/icon-512.png'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -18,7 +24,6 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Cache-first for same-origin gets
   if (e.request.method !== 'GET') return;
   e.respondWith(
     caches.match(e.request).then(cached => {
@@ -29,7 +34,7 @@ self.addEventListener('fetch', e => {
           caches.open(CACHE).then(c => c.put(e.request, clone));
         }
         return resp;
-      }).catch(() => caches.match('/index.html'));
+      }).catch(() => caches.match('/guide-de-poche/index.html'));
     })
   );
 });
